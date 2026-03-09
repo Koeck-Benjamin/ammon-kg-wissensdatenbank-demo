@@ -1,350 +1,2483 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AMMON KG Wissensdatenbank App</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AMMON KG Wissensdatenbank App</title>
+  <style>
+    :root{
+      --green-900:#214f37;
+      --green-800:#2c6848;
+      --green-700:#3b7f56;
+      --green-600:#4f9867;
+      --green-500:#67ae7e;
+      --green-100:#e9f5ee;
+      --green-050:#f4faf6;
+      --sage:#eef5ef;
+      --cream:#f8fbf8;
+      --sand:#f4f2ea;
+      --slate-900:#1f2937;
+      --slate-800:#334155;
+      --slate-700:#475569;
+      --slate-600:#64748b;
+      --slate-500:#7c8ca1;
+      --slate-300:#cbd5e1;
+      --slate-200:#e2e8f0;
+      --white:#ffffff;
+      --danger:#a51d2d;
+      --danger-soft:#fbeaec;
+      --shadow:0 10px 28px rgba(15,23,42,.08);
+      --radius-xl:26px;
+      --radius-lg:18px;
+      --radius-md:14px;
+      --radius-sm:10px;
+    }
 
-<style>
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:Arial,Helvetica,sans-serif;
+      color:var(--slate-900);
+      background:
+        radial-gradient(circle at top left, rgba(103,174,126,.14), transparent 22%),
+        radial-gradient(circle at top right, rgba(79,152,103,.10), transparent 20%),
+        linear-gradient(180deg,var(--cream),var(--sage));
+      min-height:100vh;
+    }
 
-body{
-font-family:Arial;
-margin:0;
-background:#f4f7f4;
-}
+    .hidden{display:none!important}
+    .app{min-height:100vh}
+    a{text-decoration:none;color:inherit}
+    button,input,select{font:inherit}
 
-header{
-background:#2f7d32;
-color:white;
-padding:15px;
-text-align:center;
-}
+    .login-wrap{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
 
-.container{
-padding:20px;
-}
+    .login-card{
+      width:100%;
+      max-width:540px;
+      background:rgba(255,255,255,.92);
+      backdrop-filter:blur(8px);
+      border-radius:32px;
+      border:1px solid rgba(33,79,55,.1);
+      box-shadow:var(--shadow);
+      padding:28px;
+    }
 
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-gap:15px;
-}
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      margin-bottom:18px;
+    }
 
-.card{
-background:white;
-border-radius:10px;
-padding:15px;
-box-shadow:0 3px 10px rgba(0,0,0,0.1);
-cursor:pointer;
-}
+    .brand-logo{
+      width:72px;
+      height:72px;
+      border-radius:22px;
+      background:linear-gradient(135deg,var(--green-700),var(--green-500));
+      color:white;
+      display:grid;
+      place-items:center;
+      font-size:34px;
+      box-shadow:0 10px 24px rgba(59,127,86,.26);
+      flex-shrink:0;
+    }
 
-.card:hover{
-transform:scale(1.03);
-}
+    .brand h1{
+      margin:0 0 4px;
+      font-size:28px;
+      line-height:1.15;
+    }
 
-.hidden{
-display:none;
-}
+    .muted{
+      color:var(--slate-600);
+      line-height:1.5;
+    }
 
-button{
-padding:10px 15px;
-border:none;
-border-radius:8px;
-background:#2f7d32;
-color:white;
-cursor:pointer;
-}
+    .info-box{
+      margin:18px 0 20px;
+      background:linear-gradient(135deg,var(--green-050),var(--sand));
+      border:1px solid rgba(79,152,103,.14);
+      border-radius:22px;
+      padding:16px 18px;
+    }
 
-input{
-padding:10px;
-width:100%;
-margin-top:10px;
-border-radius:8px;
-border:1px solid #ccc;
-}
+    .input{
+      width:100%;
+      border:1px solid var(--slate-300);
+      background:#fff;
+      border-radius:16px;
+      padding:14px 16px;
+      outline:none;
+      transition:.18s ease;
+      margin-top:8px;
+    }
 
-.back{
-margin-bottom:20px;
-}
+    .input:focus{
+      border-color:var(--green-600);
+      box-shadow:0 0 0 4px rgba(79,152,103,.12);
+    }
 
-</style>
+    .btn{
+      border:0;
+      border-radius:16px;
+      cursor:pointer;
+      padding:13px 16px;
+      transition:.18s ease;
+      font-weight:bold;
+    }
+
+    .btn-primary{
+      width:100%;
+      color:#fff;
+      background:linear-gradient(135deg,var(--green-800),var(--green-500));
+      margin-top:16px;
+      box-shadow:0 10px 18px rgba(59,127,86,.18);
+    }
+
+    .btn-primary:hover,.chip:hover,.nav-pill:hover,.tile:hover,.mini-card:hover,.list-row:hover{
+      transform:translateY(-1px);
+    }
+
+    .error{
+      margin-top:12px;
+      color:var(--danger);
+      font-weight:bold;
+      font-size:14px;
+    }
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:20;
+      background:rgba(255,255,255,.92);
+      backdrop-filter:blur(10px);
+      border-bottom:1px solid rgba(15,23,42,.06);
+    }
+
+    .topbar-inner{
+      max-width:1260px;
+      margin:0 auto;
+      padding:16px 18px 14px;
+    }
+
+    .topbar-head{
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+      align-items:flex-start;
+      flex-wrap:wrap;
+    }
+
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      background:var(--green-100);
+      color:var(--green-900);
+      font-size:13px;
+      font-weight:bold;
+    }
+
+    .nav-scroll{
+      display:flex;
+      gap:10px;
+      overflow:auto;
+      padding-top:14px;
+      scrollbar-width:none;
+    }
+    .nav-scroll::-webkit-scrollbar{display:none}
+
+    .nav-pill{
+      white-space:nowrap;
+      border:1px solid var(--slate-200);
+      background:#fff;
+      color:var(--slate-700);
+      padding:10px 14px;
+      border-radius:999px;
+      cursor:pointer;
+      font-size:14px;
+      font-weight:bold;
+      transition:.18s ease;
+    }
+
+    .nav-pill.active{
+      background:var(--green-800);
+      border-color:var(--green-800);
+      color:#fff;
+    }
+
+    .wrap{
+      max-width:1260px;
+      margin:0 auto;
+      padding:24px 18px 48px;
+    }
+
+    .grid{
+      display:grid;
+      gap:18px;
+    }
+
+    .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+
+    .card{
+      background:#fff;
+      border-radius:var(--radius-xl);
+      padding:20px;
+      box-shadow:var(--shadow);
+      border:1px solid rgba(15,23,42,.05);
+    }
+
+    .hero{
+      background:linear-gradient(135deg,var(--green-900),var(--green-600));
+      color:#fff;
+      position:relative;
+      overflow:hidden;
+      min-height:240px;
+    }
+
+    .hero::before{
+      content:"";
+      position:absolute;
+      right:-70px;
+      top:-50px;
+      width:230px;
+      height:230px;
+      border-radius:50%;
+      background:rgba(255,255,255,.08);
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      right:70px;
+      bottom:-90px;
+      width:180px;
+      height:180px;
+      border-radius:50%;
+      background:rgba(255,255,255,.06);
+    }
+
+    .hero-content{
+      position:relative;
+      z-index:1;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:20px;
+      flex-wrap:wrap;
+    }
+
+    .hero-art{
+      width:100%;
+      max-width:280px;
+      display:grid;
+      place-items:center;
+      flex-shrink:0;
+    }
+
+    .hero-badges{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .hero-badge{
+      background:rgba(255,255,255,.14);
+      border:1px solid rgba(255,255,255,.14);
+      color:#fff;
+      border-radius:999px;
+      padding:8px 12px;
+      font-size:13px;
+      font-weight:bold;
+    }
+
+    .section-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .section-head h2,.section-head h3,.card h3,.card h4{
+      margin:0 0 6px;
+    }
+
+    .tile{
+      background:#fff;
+      border-radius:24px;
+      border:1px solid rgba(15,23,42,.05);
+      box-shadow:var(--shadow);
+      padding:18px;
+      cursor:pointer;
+      transition:.18s ease;
+      min-height:180px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+
+    .tile-top{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:flex-start;
+    }
+
+    .tile-icon{
+      width:60px;
+      height:60px;
+      border-radius:18px;
+      display:grid;
+      place-items:center;
+      font-size:28px;
+      background:linear-gradient(135deg,var(--green-100),#f6fbf7);
+      color:var(--green-900);
+      border:1px solid rgba(79,152,103,.12);
+      flex-shrink:0;
+    }
+
+    .tile p{margin:0;color:var(--slate-600);line-height:1.45}
+    .tile small{color:var(--green-800);font-weight:bold}
+
+    .quick-box{
+      background:linear-gradient(135deg,#f8fcf8,#eef7f0);
+      border:1px dashed rgba(59,127,86,.2);
+    }
+
+    .filters{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+
+    .select,.search{
+      border:1px solid var(--slate-300);
+      background:#fff;
+      border-radius:16px;
+      padding:13px 14px;
+      min-width:220px;
+      outline:none;
+    }
+
+    .search{
+      width:100%;
+      min-width:260px;
+      flex:1;
+    }
+
+    .chip-row{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+
+    .chip{
+      border:1px solid var(--slate-200);
+      background:#fff;
+      color:var(--slate-700);
+      border-radius:999px;
+      padding:8px 12px;
+      font-size:13px;
+      font-weight:bold;
+      cursor:pointer;
+      transition:.18s ease;
+    }
+
+    .chip.active{
+      background:var(--green-100);
+      border-color:rgba(59,127,86,.24);
+      color:var(--green-900);
+    }
+
+    .mini-card{
+      background:#fff;
+      border:1px solid rgba(15,23,42,.05);
+      box-shadow:var(--shadow);
+      border-radius:22px;
+      overflow:hidden;
+      cursor:pointer;
+      transition:.18s ease;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .mini-thumb{
+      height:170px;
+      background:#f3f7f3;
+      display:grid;
+      place-items:center;
+      border-bottom:1px solid rgba(15,23,42,.05);
+    }
+
+    .mini-content{
+      padding:16px;
+    }
+
+    .subline{
+      font-size:12px;
+      color:var(--green-800);
+      font-weight:bold;
+      letter-spacing:.4px;
+      text-transform:uppercase;
+    }
+
+    .pill{
+      display:inline-block;
+      font-size:12px;
+      font-weight:bold;
+      color:var(--green-900);
+      background:var(--green-100);
+      border-radius:999px;
+      padding:6px 10px;
+      margin:0 6px 6px 0;
+    }
+
+    .light-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      background:#f8fbf8;
+      border:1px solid var(--slate-200);
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:12px;
+      font-weight:bold;
+      color:var(--slate-700);
+    }
+
+    .list{
+      display:grid;
+      gap:10px;
+    }
+
+    .list-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      border:1px solid var(--slate-200);
+      border-radius:16px;
+      padding:12px 14px;
+      background:#fff;
+      cursor:pointer;
+      transition:.18s ease;
+    }
+
+    .back-btn{
+      margin-bottom:16px;
+      background:#fff;
+      border:1px solid var(--slate-200);
+      color:var(--slate-800);
+      border-radius:14px;
+      padding:10px 14px;
+      cursor:pointer;
+      font-weight:bold;
+    }
+
+    .detail-layout{
+      display:grid;
+      grid-template-columns:340px 1fr;
+      gap:20px;
+    }
+
+    .detail-sticky{
+      position:sticky;
+      top:110px;
+      align-self:start;
+    }
+
+    .detail-thumb{
+      background:#fff;
+      border-radius:26px;
+      padding:18px;
+      box-shadow:var(--shadow);
+      border:1px solid rgba(15,23,42,.05);
+      overflow:hidden;
+    }
+
+    .detail-main{
+      display:grid;
+      gap:18px;
+    }
+
+    .detail-thumb .thumb-wrap{
+      border-radius:18px;
+      overflow:hidden;
+      background:#f4f8f4;
+    }
+
+    .detail-headline{
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+      align-items:flex-start;
+      flex-wrap:wrap;
+    }
+
+    .detail-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+
+    .ghost-btn{
+      border:1px solid var(--slate-200);
+      background:#fff;
+      color:var(--slate-800);
+      border-radius:14px;
+      padding:10px 12px;
+      cursor:pointer;
+      font-weight:bold;
+    }
+
+    .call-btn{
+      background:linear-gradient(135deg,var(--green-800),var(--green-500));
+      color:#fff;
+      border-radius:14px;
+      padding:12px 14px;
+      display:inline-block;
+      font-weight:bold;
+    }
+
+    .kv{
+      display:grid;
+      gap:10px;
+    }
+
+    .kv-row{
+      display:grid;
+      grid-template-columns:160px 1fr;
+      gap:12px;
+      align-items:start;
+      padding:10px 0;
+      border-bottom:1px solid var(--slate-200);
+    }
+
+    .kv-row:last-child{border-bottom:0}
+
+    .note{
+      background:var(--danger-soft);
+      color:#7e1623;
+      border:1px solid rgba(165,29,45,.12);
+      border-radius:18px;
+      padding:14px 16px;
+      line-height:1.5;
+    }
+
+    .success{
+      background:var(--green-100);
+      color:var(--green-900);
+      border:1px solid rgba(59,127,86,.12);
+      border-radius:18px;
+      padding:14px 16px;
+      line-height:1.5;
+    }
+
+    ul.clean,ol.clean{
+      margin:8px 0 0;
+      padding-left:20px;
+      color:var(--slate-700);
+      line-height:1.55;
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;
+    }
+
+    .stat{
+      background:#fff;
+      border-radius:22px;
+      box-shadow:var(--shadow);
+      border:1px solid rgba(15,23,42,.05);
+      padding:18px;
+    }
+
+    .stat strong{
+      display:block;
+      font-size:28px;
+      margin-bottom:6px;
+    }
+
+    .footer-note{
+      margin-top:20px;
+      text-align:center;
+      color:var(--slate-500);
+      font-size:13px;
+    }
+
+    .empty{
+      text-align:center;
+      color:var(--slate-500);
+      padding:24px 10px;
+      background:#fff;
+      border-radius:20px;
+      border:1px dashed var(--slate-300);
+    }
+
+    .link-list{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:10px;
+    }
+
+    .link-chip{
+      background:#fff;
+      border:1px solid rgba(59,127,86,.18);
+      color:var(--green-900);
+      border-radius:999px;
+      padding:9px 12px;
+      cursor:pointer;
+      font-weight:bold;
+      font-size:13px;
+    }
+
+    .link-chip:hover{
+      background:var(--green-100);
+    }
+
+    @media (max-width:980px){
+      .detail-layout{grid-template-columns:1fr}
+      .detail-sticky{position:static}
+      .stats{grid-template-columns:1fr}
+    }
+
+    @media (max-width:820px){
+      .grid-4,.grid-3,.grid-2{grid-template-columns:1fr}
+      .brand h1{font-size:24px}
+      .tile{min-height:auto}
+      .kv-row{grid-template-columns:1fr;gap:6px}
+      .topbar-inner,.wrap{padding-left:14px;padding-right:14px}
+    }
+  </style>
 </head>
-
 <body>
-
-<!-- LOGIN -->
-
-<div id="login">
-
-<header>
-<h2>AMMON KG Wissensdatenbank App</h2>
-</header>
-
-<div class="container">
-
-<p>
-Willkommen in der internen Wissensdatenbank der AMMON KG.  
-Hier findest du alle wichtigen Informationen zur Pflanzenpflege,
-Schadbildern, Schädlingen, Werkzeugen und Arbeitsabläufen.
-</p>
-
-<input type="password" id="password" placeholder="Passwort eingeben">
-
-<button onclick="login()">Einloggen</button>
-
-<p id="error" style="color:red;"></p>
-
-</div>
-
-</div>
-
-<!-- APP -->
-
-<div id="app" class="hidden">
-
-<header>
-<h2>AMMON KG Wissensdatenbank</h2>
-</header>
-
-<div class="container">
-
-<div class="grid">
-
-<div class="card" onclick="openPage('schnellhilfe')">
-<h3>🔎 Schnellhilfe</h3>
-<p>Schnell Lösungen für Schäden oder Schädlinge finden.</p>
-</div>
-
-<div class="card" onclick="openPage('pflanzen')">
-<h3>🌿 Pflanzenarten</h3>
-<p>Steckbriefe der wichtigsten Pflanzen.</p>
-</div>
-
-<div class="card" onclick="openPage('schaeden')">
-<h3>⚠️ Pflanzenschäden</h3>
-<p>Gelbe Blätter, Flecken und andere Probleme erkennen.</p>
-</div>
-
-<div class="card" onclick="openPage('schaedlinge')">
-<h3>🐛 Schädlinge</h3>
-<p>Schädlinge erkennen und bekämpfen.</p>
-</div>
-
-<div class="card" onclick="openPage('schutz')">
-<h3>🧪 Pflanzenschutzmittel</h3>
-<p>Nützlinge und Bekämpfungsmethoden.</p>
-</div>
-
-<div class="card" onclick="openPage('blueplant')">
-<h3>📱 Blueplant</h3>
-<p>Hilfe zur Pflegedokumentation.</p>
-</div>
-
-<div class="card" onclick="openPage('werkzeug')">
-<h3>🛠 Werkzeuge</h3>
-<p>Gerüst, Balkenkran und Geräte.</p>
-</div>
-
-<div class="card" onclick="openPage('kunden')">
-<h3>🤝 Kundenauftritt</h3>
-<p>Professionelles Verhalten beim Kunden.</p>
-</div>
-
-<div class="card" onclick="openPage('schulung')">
-<h3>🎓 Schulungen</h3>
-<p>Wichtige Lerninhalte für Mitarbeiter.</p>
-</div>
-
-<div class="card" onclick="openPage('videos')">
-<h3>🎥 Videos</h3>
-<p>Tutorials und Schulungsvideos.</p>
-</div>
-
-<div class="card" onclick="openPage('checkliste')">
-<h3>✅ Checklisten</h3>
-<p>Servicekontrollen vor Ort.</p>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<!-- SCHNELLHILFE -->
-
-<div id="schnellhilfe" class="hidden container">
-
-<button class="back" onclick="home()">← Zurück</button>
-
-<h2>Schnellhilfe</h2>
-
-<p>Wähle das Problem:</p>
-
-<ul>
-
-<li onclick="openPage('thripse')">Silbrige Blätter / Flecken</li>
-
-<li onclick="openPage('spinnmilben')">Feine Netze auf Blättern</li>
-
-<li onclick="openPage('wollaeuse')">Weiße watteartige Punkte</li>
-
-<li onclick="openPage('schildlaeuse')">Braune Schilde auf Blättern</li>
-
-</ul>
-
-</div>
-
-<!-- PFLANZEN -->
-
-<div id="pflanzen" class="hidden container">
-
-<button class="back" onclick="home()">← Zurück</button>
-
-<h2>Pflanzenarten</h2>
-
-<ul>
-
-<li onclick="openPage('ficus')">Ficus</li>
-
-<li onclick="openPage('dracaena')">Dracaena</li>
-
-<li onclick="openPage('monstera')">Monstera</li>
-
-<li onclick="openPage('spathiphyllum')">Spathiphyllum</li>
-
-<li onclick="openPage('zamioculcas')">Zamioculcas</li>
-
-</ul>
-
-</div>
-
-<!-- SCHÄDLING BEISPIEL -->
-
-<div id="thripse" class="hidden container">
-
-<button class="back" onclick="home()">← Zurück</button>
-
-<h2>Thripse</h2>
-
-<p>
-Thripse verursachen silbrige Flecken auf Blättern und können
-schnell große Schäden verursachen.
-</p>
-
-<p>Bekämpfung:</p>
-
-<ul>
-
-<li onclick="openPage('raubmilben')">Raubmilben einsetzen</li>
-
-</ul>
-
-</div>
-
-<div id="raubmilben" class="hidden container">
-
-<button class="back" onclick="home()">← Zurück</button>
-
-<h2>Raubmilben</h2>
-
-<p>
-
-Nützlinge zur biologischen Bekämpfung von Thripsen und Spinnmilben.
-
-</p>
-
-<p>
-
-Anwendung: Karten in die Pflanze hängen.
-
-</p>
-
-</div>
-
-<!-- BLUEPLANT -->
-
-<div id="blueplant" class="hidden container">
-
-<button class="back" onclick="home()">← Zurück</button>
-
-<h2>Blueplant Hilfe</h2>
-
-<p>
-
-Blueplant wird für Dokumentation, Lauflisten und Bestände verwendet.
-
-</p>
-
-<a href="tel:+436644145215">
-<button>Problem melden</button>
-</a>
-
-</div>
-
-<!-- CHECKLISTE -->
-
-<div id="checkliste" class="hidden container">
-
-<button class="back" onclick="home()">← Zurück</button>
-
-<h2>Service Checkliste</h2>
-
-<ul>
-
-<li>Wasserstand prüfen</li>
-
-<li>Schädlingskontrolle durchführen</li>
-
-<li>Gelbe Blätter entfernen</li>
-
-<li>Standort prüfen</li>
-
-<li>Dokumentation in Blueplant</li>
-
-</ul>
-
-</div>
-
-<script>
-
-function login(){
-
-let pass=document.getElementById("password").value;
-
-if(pass==="Ammon1913"){
-
-document.getElementById("login").classList.add("hidden");
-
-document.getElementById("app").classList.remove("hidden");
-
-}else{
-
-document.getElementById("error").innerText="Falsches Passwort";
-
-}
-
-}
-
-function openPage(id){
-
-document.querySelectorAll(".container").forEach(p=>p.classList.add("hidden"));
-
-document.getElementById("app").classList.add("hidden");
-
-document.getElementById(id).classList.remove("hidden");
-
-}
-
-function home(){
-
-document.querySelectorAll(".container").forEach(p=>p.classList.add("hidden"));
-
-document.getElementById("app").classList.remove("hidden");
-
-}
-
-</script>
-
+  <div id="loginScreen" class="login-wrap">
+    <div class="login-card">
+      <div class="brand">
+        <div class="brand-logo">🌿</div>
+        <div>
+          <h1>AMMON KG Wissensdatenbank App</h1>
+          <div class="muted">Interne Hilfestellung für Außenmitarbeiter bei Pflege, Montage, Auspflanzung, Pflanzenschutz und professionellem Arbeiten.</div>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <strong>Was hinter dem Login wartet</strong>
+        <div class="muted" style="margin-top:6px;">
+          Schnellhilfe, Pflanzenarten, Pflanzenschäden, Schädlinge, Pflanzenschutzmittel, Blueplant-Hilfe, Werkzeugstandards, Kundenauftritt, Schulungen, Videos und Checklisten.
+        </div>
+      </div>
+
+      <label for="password"><strong>Passwort</strong></label>
+      <input id="password" class="input" type="password" placeholder="Passwort eingeben" />
+      <button class="btn btn-primary" onclick="login()">Einloggen</button>
+      <div id="loginError" class="error hidden">Falsches Passwort. Für die Demo: Ammon1913</div>
+    </div>
+  </div>
+
+  <div id="appRoot" class="app hidden">
+    <div class="topbar">
+      <div class="topbar-inner">
+        <div class="topbar-head">
+          <div>
+            <div style="font-weight:bold;font-size:24px;margin-bottom:4px;">AMMON KG Wissensdatenbank App</div>
+            <div class="muted">Nachschlagewerk, Schnellhilfe und Standards für den Außendienst</div>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+            <span class="tag">Demo-Version</span>
+            <button class="ghost-btn" onclick="logout()">Logout</button>
+          </div>
+        </div>
+
+        <div class="nav-scroll" id="menuBar"></div>
+      </div>
+    </div>
+
+    <div class="wrap" id="view"></div>
+  </div>
+
+  <script>
+    const APP_PASSWORD = "Ammon1913";
+
+    const MENU_ORDER = [
+      { id: "home", label: "Start" },
+      { id: "quickhelp", label: "Schnellhilfe" },
+      { id: "plants", label: "Pflanzenarten" },
+      { id: "symptoms", label: "Pflanzenschäden" },
+      { id: "pests", label: "Schädlinge" },
+      { id: "products", label: "Pflanzenschutzmittel" },
+      { id: "knowledge", label: "Wissensdatenbank" },
+      { id: "blueplant", label: "Blueplant" },
+      { id: "customer", label: "Auftreten beim Kunden" },
+      { id: "tools", label: "Werkzeuge & Maschinen" },
+      { id: "training", label: "Schulungen" },
+      { id: "videos", label: "Videos" },
+      { id: "checklists", label: "Checklisten" }
+    ];
+
+    const state = {
+      route: "home",
+      selectedPlantGroup: "",
+      selectedPestGroup: "",
+      selectedVideoCategory: "Alle",
+      selectedVideoTag: "Alle",
+      quickType: "Alle",
+      quickSearch: "",
+      symptomSearch: "",
+      plantSearch: "",
+      productSearch: "",
+      pestSearch: ""
+    };
+
+    const phoneNumberHuman = "+43 664 4145215";
+    const phoneNumberTel = "+436644145215";
+
+    function sortByName(arr, key="name"){
+      return [...arr].sort((a,b) => a[key].localeCompare(b[key], "de", { sensitivity: "base" }));
+    }
+
+    function uniqSorted(values){
+      return [...new Set(values)].sort((a,b) => a.localeCompare(b, "de", { sensitivity: "base" }));
+    }
+
+    function svgThumb({ title, subtitle="", icon="🌿", colors=["#ecf7ef","#d9efdf","#4f9867"] }){
+      const [bg1,bg2,accent] = colors;
+      const textTitle = title.replace(/&/g,"&amp;");
+      const textSub = subtitle.replace(/&/g,"&amp;");
+      const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="800" height="520" viewBox="0 0 800 520">
+          <defs>
+            <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0%" stop-color="${bg1}"/>
+              <stop offset="100%" stop-color="${bg2}"/>
+            </linearGradient>
+          </defs>
+          <rect width="800" height="520" rx="36" fill="url(#g)"/>
+          <circle cx="670" cy="110" r="110" fill="rgba(255,255,255,0.45)"/>
+          <circle cx="720" cy="420" r="120" fill="rgba(255,255,255,0.32)"/>
+          <rect x="42" y="42" width="716" height="436" rx="28" fill="rgba(255,255,255,0.55)" stroke="rgba(79,152,103,0.15)"/>
+          <circle cx="130" cy="130" r="60" fill="${accent}"/>
+          <text x="130" y="148" text-anchor="middle" font-size="56">${icon}</text>
+          <text x="72" y="250" font-family="Arial, Helvetica, sans-serif" font-size="38" font-weight="700" fill="#214f37">${textTitle}</text>
+          <text x="72" y="294" font-family="Arial, Helvetica, sans-serif" font-size="22" fill="#476356">${textSub}</text>
+          <rect x="72" y="340" width="170" height="20" rx="10" fill="rgba(79,152,103,0.18)"/>
+          <rect x="72" y="374" width="300" height="18" rx="9" fill="rgba(79,152,103,0.13)"/>
+          <rect x="72" y="404" width="240" height="18" rx="9" fill="rgba(79,152,103,0.11)"/>
+        </svg>
+      `;
+      return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+    }
+
+    const plants = [
+      {
+        group:"Aglaonema",
+        name:"Aglaonema Silver Bay",
+        light:"Halbschatten",
+        water:"Mäßig",
+        special:"Verträgt innen auch ruhigere Standorte, mag keine Staunässe.",
+        care:"Substrat leicht antrocknen lassen, nicht in kalter Zugluft.",
+        damages:["Braune Spitzen","Gelbe Blätter","Staunässe"],
+        pests:["Wollläuse"],
+        image:svgThumb({title:"Aglaonema Silver Bay",subtitle:"Robuste Blattpflanze für innen",icon:"🌿",colors:["#eef8ef","#d8eedf","#5ca16d"]})
+      },
+      {
+        group:"Alocasia",
+        name:"Alocasia Cucullata",
+        light:"Hell",
+        water:"Erhöht",
+        special:"Mag Wärme und gleichmäßige Feuchte, reagiert schnell auf Pflegefehler.",
+        care:"Keine Staunässe, hohe Luftfeuchte günstig, hell ohne harte Mittagssonne.",
+        damages:["Braune Flecken","Braune Spitzen","Gelbe Blätter"],
+        pests:["Spinnmilben","Thripse"],
+        image:svgThumb({title:"Alocasia Cucullata",subtitle:"Großblättrige Strukturpflanze",icon:"🍃",colors:["#f0f8f1","#d7efde","#4f9867"]})
+      },
+      {
+        group:"Anthurium",
+        name:"Anthurium andreanum",
+        light:"Hell",
+        water:"Mäßig",
+        special:"Blühpflanze mit höherem Anspruch an Standort und gleichmäßige Pflege.",
+        care:"Hell stellen, aber direkte Sommersonne vermeiden. Gleichmäßig pflegen.",
+        damages:["Braune Flecken","Braune Spitzen","Blattfall"],
+        pests:["Thripse","Wollläuse"],
+        image:svgThumb({title:"Anthurium andreanum",subtitle:"Blühpflanze mit Hochblatt",icon:"🌺",colors:["#fff1f1","#fde1e1","#cc6464"]})
+      },
+      {
+        group:"Chamaedorea",
+        name:"Chamaedorea elegans",
+        light:"Halbschatten",
+        water:"Mäßig",
+        special:"Feine Zimmerpalme für ruhigere Innenräume.",
+        care:"Nicht austrocknen lassen, aber Staunässe vermeiden.",
+        damages:["Braune Spitzen","Gelbe Blätter"],
+        pests:["Spinnmilben"],
+        image:svgThumb({title:"Chamaedorea elegans",subtitle:"Kompakte Bergpalme",icon:"🌴",colors:["#eef8ef","#d9efde","#5a9d68"]})
+      },
+      {
+        group:"Dracaena",
+        name:"Dracaena Janet Craig",
+        light:"Halbschatten",
+        water:"Mäßig",
+        special:"Beliebte robuste Innenraumpflanze mit ruhigem Erscheinungsbild.",
+        care:"Gleichmäßig leicht feucht, keine nassen Füße, kalkarmes Wasser besser.",
+        damages:["Braune Spitzen","Gelbe Blätter","Lichtmangel"],
+        pests:["Schildläuse","Spinnmilben"],
+        image:svgThumb({title:"Dracaena Janet Craig",subtitle:"Robuste Standardpflanze",icon:"🌿",colors:["#f0f8f1","#d9efdf","#4f9867"]})
+      },
+      {
+        group:"Dracaena",
+        name:"Dracaena Lemon Lime",
+        light:"Hell",
+        water:"Mäßig",
+        special:"Auffällige Blattzeichnung, braucht für gute Farbe mehr Licht.",
+        care:"Hell stellen, aber direkte harte Sonne meiden.",
+        damages:["Braune Spitzen","Gelbe Blätter"],
+        pests:["Schildläuse","Thripse"],
+        image:svgThumb({title:"Dracaena Lemon Lime",subtitle:"Helle Blattzeichnung",icon:"🌱",colors:["#f7fbe9","#edf5c8","#84a33f"]})
+      },
+      {
+        group:"Dracaena",
+        name:"Dracaena Marginata",
+        light:"Hell",
+        water:"Wenig bis mäßig",
+        special:"Schlanke Form, sensibel auf zu viel Wasser.",
+        care:"Zwischen Gießgängen leicht antrocknen lassen.",
+        damages:["Braune Spitzen","Weiche Triebe","Staunässe"],
+        pests:["Schildläuse","Spinnmilben"],
+        image:svgThumb({title:"Dracaena Marginata",subtitle:"Schlanke Formpflanze",icon:"🌿",colors:["#f0f8f1","#d8eedf","#547f55"]})
+      },
+      {
+        group:"Epipremnum",
+        name:"Epipremnum aureum",
+        light:"Halbschatten",
+        water:"Mäßig",
+        special:"Sehr dankbare Innenraumpflanze, rankend oder hängend einsetzbar.",
+        care:"Substrat leicht antrocknen lassen, regelmäßig prüfen.",
+        damages:["Gelbe Blätter","Lichtmangel","Staunässe"],
+        pests:["Wollläuse","Thripse"],
+        image:svgThumb({title:"Epipremnum aureum",subtitle:"Rankende Standardpflanze",icon:"🪴",colors:["#f4fae8","#e5f2c4","#7ca344"]})
+      },
+      {
+        group:"Ficus",
+        name:"Ficus Amstel King",
+        light:"Hell",
+        water:"Mäßig",
+        special:"Möchte stabilen Standort, reagiert auf Veränderungen oft mit Blattfall.",
+        care:"Standortwechsel vermeiden, gleichmäßig pflegen.",
+        damages:["Blattfall","Gelbe Blätter","Lichtmangel"],
+        pests:["Spinnmilben","Thripse"],
+        image:svgThumb({title:"Ficus Amstel King",subtitle:"Elegante schmale Blätter",icon:"🌳",colors:["#eef8ef","#d8eedf","#4a915f"]})
+      },
+      {
+        group:"Ficus",
+        name:"Ficus Benjamina",
+        light:"Hell",
+        water:"Mäßig",
+        special:"Klassiker für Innenraumbegrünung, sensibel auf Zugluft und Standortwechsel.",
+        care:"Heller Standort, gleichmäßige Pflege, keine kalte Luft.",
+        damages:["Blattfall","Gelbe Blätter","Lichtmangel"],
+        pests:["Spinnmilben","Thripse","Schildläuse"],
+        image:svgThumb({title:"Ficus Benjamina",subtitle:"Klassische Innenraumbegrünung",icon:"🌳",colors:["#eef8ef","#d7efde","#529765"]})
+      },
+      {
+        group:"Ficus",
+        name:"Ficus Bambino",
+        light:"Hell",
+        water:"Mäßig",
+        special:"Kleinblättrige Form des Ficus, braucht ruhigen Stand.",
+        care:"Regelmäßig kontrollieren, gleichmäßig pflegen.",
+        damages:["Blattfall","Braune Flecken"],
+        pests:["Spinnmilben","Thripse"],
+        image:svgThumb({title:"Ficus Bambino",subtitle:"Kompakte kleinblättrige Form",icon:"🌿",colors:["#eef8ef","#d9efdf","#4f9867"]})
+      },
+      {
+        group:"Ficus",
+        name:"Ficus Cyathistipula",
+        light:"Hell",
+        water:"Mäßig",
+        special:"Etwas toleranter bei Innenraumbedingungen, kräftige Blattstruktur.",
+        care:"Hell bis mittelhell, gleichmäßig pflegen, nicht vernässen.",
+        damages:["Gelbe Blätter","Braune Flecken"],
+        pests:["Thripse","Schildläuse"],
+        image:svgThumb({title:"Ficus Cyathistipula",subtitle:"Kräftige Blattstruktur",icon:"🍃",colors:["#eef8ef","#d9efdf","#5d9f6c"]})
+      },
+      {
+        group:"Ficus",
+        name:"Ficus Elastica",
+        light:"Hell",
+        water:"Mäßig",
+        special:"Große ledrige Blätter, dekorativ und robust bei gutem Licht.",
+        care:"Hell stellen, Gießrhythmus stabil halten.",
+        damages:["Braune Flecken","Gelbe Blätter"],
+        pests:["Schildläuse","Thripse"],
+        image:svgThumb({title:"Ficus Elastica",subtitle:"Großblättriger Gummibaum",icon:"🌿",colors:["#eef8ef","#d7efde","#4c8d60"]})
+      },
+      {
+        group:"Howea",
+        name:"Howea forsteriana",
+        light:"Halbschatten",
+        water:"Mäßig",
+        special:"Kentia-Palme, sehr beliebt im Innenraum.",
+        care:"Nicht austrocknen lassen, aber auch nicht vernässen.",
+        damages:["Braune Spitzen","Gelbe Blätter"],
+        pests:["Spinnmilben","Schildläuse"],
+        image:svgThumb({title:"Howea forsteriana",subtitle:"Kentia-Palme",icon:"🌴",colors:["#eef8ef","#d8eedf","#5b9b68"]})
+      },
+      {
+        group:"Monstera",
+        name:"Monstera adansonii",
+        light:"Hell",
+        water:"Mäßig",
+        special:"Kletternde Strukturpflanze mit durchbrochenem Blattbild.",
+        care:"Hell, gleichmäßig pflegen, keine starke Austrocknung.",
+        damages:["Braune Flecken","Gelbe Blätter"],
+        pests:["Thripse","Spinnmilben"],
+        image:svgThumb({title:"Monstera adansonii",subtitle:"Kletternde Lochblattform",icon:"🍃",colors:["#eef8ef","#d8eedf","#4f9867"]})
+      },
+      {
+        group:"Monstera",
+        name:"Monstera deliciosa",
+        light:"Hell",
+        water:"Mäßig",
+        special:"Sehr gängige Großpflanze mit starkem Blattschmuck.",
+        care:"Hell und warm, keine Staunässe, Stütze günstig.",
+        damages:["Braune Flecken","Gelbe Blätter","Lichtmangel"],
+        pests:["Thripse","Spinnmilben","Wollläuse"],
+        image:svgThumb({title:"Monstera deliciosa",subtitle:"Großblättrige Strukturpflanze",icon:"🌿",colors:["#eef8ef","#d9efdf","#4e9867"]})
+      },
+      {
+        group:"Philodendron",
+        name:"Philodendron Green Princess",
+        light:"Halbschatten",
+        water:"Mäßig",
+        special:"Kompakter Philodendron, gut für Innenbereiche.",
+        care:"Leicht feucht halten, Staunässe vermeiden.",
+        damages:["Gelbe Blätter","Braune Spitzen"],
+        pests:["Wollläuse","Thripse"],
+        image:svgThumb({title:"Philodendron Green Princess",subtitle:"Kompakte Blattpflanze",icon:"🌱",colors:["#eef8ef","#d9efdf","#5b9c69"]})
+      },
+      {
+        group:"Sansevieria",
+        name:"Sansevieria trifasciata",
+        light:"Halbschatten",
+        water:"Wenig",
+        special:"Sehr robust, verträgt trockene Innenräume gut.",
+        care:"Sparsam gießen, Staunässe strikt vermeiden.",
+        damages:["Weiche Triebe","Staunässe"],
+        pests:["Wollläuse"],
+        image:svgThumb({title:"Sansevieria trifasciata",subtitle:"Sehr robuste Strukturpflanze",icon:"🪴",colors:["#f4f8e9","#e7f0c6","#7e9c44"]})
+      },
+      {
+        group:"Schefflera",
+        name:"Schefflera arboricola",
+        light:"Hell",
+        water:"Mäßig",
+        special:"Beliebte Schirmaralie mit guter Innenraumwirkung.",
+        care:"Hell, aber ohne extreme Sonne; gleichmäßig pflegen.",
+        damages:["Blattfall","Gelbe Blätter"],
+        pests:["Schildläuse","Spinnmilben"],
+        image:svgThumb({title:"Schefflera arboricola",subtitle:"Beliebte Schirmaralie",icon:"🍀",colors:["#eef8ef","#d8eedf","#5b9d68"]})
+      },
+      {
+        group:"Spathiphyllum",
+        name:"Spathiphyllum Sweet Chico",
+        light:"Halbschatten",
+        water:"Erhöht",
+        special:"Sehr typische Innenraumpflanze, zeigt Wassermangel sichtbar an.",
+        care:"Nie komplett austrocknen lassen, Staunässe trotzdem vermeiden.",
+        damages:["Gelbe Blätter","Braune Spitzen","Hängende Blätter"],
+        pests:["Thripse","Wollläuse"],
+        image:svgThumb({title:"Spathiphyllum Sweet Chico",subtitle:"Beliebte Friedenslilie",icon:"🌼",colors:["#f7fbf3","#e4f0d8","#81a56c"]})
+      },
+      {
+        group:"Zamioculcas",
+        name:"Zamioculcas zamiifolia",
+        light:"Halbschatten",
+        water:"Wenig",
+        special:"Sehr robust, reagiert aber empfindlich auf zu viel Wasser.",
+        care:"Sparsam gießen, Substrat gut abtrocknen lassen.",
+        damages:["Weiche Triebe","Gelbe Blätter","Staunässe"],
+        pests:["Wollläuse"],
+        image:svgThumb({title:"Zamioculcas zamiifolia",subtitle:"Robuste ZZ-Pflanze",icon:"🌿",colors:["#eef8ef","#d7efde","#4f9867"]})
+      }
+    ];
+
+    const pestGroups = [
+      {
+        group:"Schildläuse",
+        items:[
+          {
+            name:"Deckelschildlaus",
+            recognition:"Braune bis dunkle feste Schilde an Trieben, Blattunterseiten oder Blattachseln.",
+            effect:"Pflanzen werden geschwächt, oft klebrige Beläge durch Honigtau.",
+            affectedPlants:["Dracaena Janet Craig","Ficus Benjamina","Ficus Elastica","Howea forsteriana","Schefflera arboricola"],
+            controls:["Florfliegenlarven"],
+            products:["Florfliegenlarven"],
+            image:svgThumb({title:"Deckelschildlaus",subtitle:"Schildläuse",icon:"🐛",colors:["#fff5ef","#f7dfcf","#bf8155"]})
+          },
+          {
+            name:"Napfschildlaus",
+            recognition:"Gewölbte schalenartige Schilde, oft an Blattstielen und jungen Trieben.",
+            effect:"Klebriger Honigtau, Wachstumsstörungen und verschmutzte Blätter.",
+            affectedPlants:["Dracaena Lemon Lime","Ficus Cyathistipula","Schefflera arboricola"],
+            controls:["Florfliegenlarven"],
+            products:["Florfliegenlarven"],
+            image:svgThumb({title:"Napfschildlaus",subtitle:"Schildläuse",icon:"🐛",colors:["#fff5ef","#f7dfcf","#b97b4f"]})
+          }
+        ]
+      },
+      {
+        group:"Sonstige Schädlinge",
+        items:[
+          {
+            name:"Blattläuse",
+            recognition:"Kleine grüne, schwarze oder gelbliche Läuse an Triebspitzen und jungen Blättern.",
+            effect:"Verkrüppelungen, klebrige Beläge, geschwächter Austrieb.",
+            affectedPlants:["Anthurium andreanum","Spathiphyllum Sweet Chico"],
+            controls:["Florfliegenlarven"],
+            products:["Florfliegenlarven"],
+            image:svgThumb({title:"Blattläuse",subtitle:"Sonstige Schädlinge",icon:"🐞",colors:["#f6fbef","#e4f3d0","#81a34a"]})
+          },
+          {
+            name:"Trauermücken",
+            recognition:"Kleine schwarze Fliegen am Substrat, häufig bei zu nasser Erde.",
+            effect:"Larven schädigen Wurzeln, besonders bei Jungpflanzen.",
+            affectedPlants:["Aglaonema Silver Bay","Philodendron Green Princess","Spathiphyllum Sweet Chico"],
+            controls:["Nematoden"],
+            products:["Nematoden"],
+            image:svgThumb({title:"Trauermücken",subtitle:"Sonstige Schädlinge",icon:"🪰",colors:["#f5f6f8","#e5e8ed","#707b8d"]})
+          }
+        ]
+      },
+      {
+        group:"Spinnmilben",
+        items:[
+          {
+            name:"Gemeine Spinnmilbe",
+            recognition:"Sehr feine Gespinste und helle Sprenkel auf den Blättern, meist bei trockener Luft.",
+            effect:"Blätter wirken matt, später gelblich und trocken.",
+            affectedPlants:["Alocasia Cucullata","Chamaedorea elegans","Ficus Amstel King","Ficus Bambino","Howea forsteriana","Monstera deliciosa"],
+            controls:["Raubmilben"],
+            products:["Raubmilben"],
+            image:svgThumb({title:"Gemeine Spinnmilbe",subtitle:"Spinnmilben",icon:"🕸️",colors:["#f8f6ef","#eee7d7","#9e8a59"]})
+          }
+        ]
+      },
+      {
+        group:"Thripse",
+        items:[
+          {
+            name:"Kalifornischer Blütenthrips",
+            recognition:"Silbrige Blattpartien, schwarze Kotpunkte und deformierte junge Blätter.",
+            effect:"Wachstumsstörungen, Flecken und optische Schäden.",
+            affectedPlants:["Alocasia Cucullata","Anthurium andreanum","Dracaena Lemon Lime","Ficus Benjamina","Monstera adansonii","Monstera deliciosa","Spathiphyllum Sweet Chico"],
+            controls:["Raubmilben"],
+            products:["Raubmilben"],
+            image:svgThumb({title:"Kalifornischer Blütenthrips",subtitle:"Thripse",icon:"⚠️",colors:["#fff6ef","#f6e3d6","#bb7b5a"]})
+          },
+          {
+            name:"Tabakthrips",
+            recognition:"Silbrige Saugschäden mit feinen schwarzen Punkten; sitzt gern geschützt.",
+            effect:"Vergraute Blattflächen und Kümmerwuchs.",
+            affectedPlants:["Dracaena Marginata","Ficus Cyathistipula","Philodendron Green Princess"],
+            controls:["Raubmilben"],
+            products:["Raubmilben"],
+            image:svgThumb({title:"Tabakthrips",subtitle:"Thripse",icon:"⚠️",colors:["#fff6ef","#f5e2d5","#af7656"]})
+          }
+        ]
+      },
+      {
+        group:"Wollläuse",
+        items:[
+          {
+            name:"Citrus-Wolllaus",
+            recognition:"Weiße watteartige Nester an Blattachseln, Trieben und Blattunterseiten.",
+            effect:"Starker Saugschaden, klebrige Rückstände und geschwächte Pflanzen.",
+            affectedPlants:["Anthurium andreanum","Epipremnum aureum","Monstera deliciosa","Philodendron Green Princess","Zamioculcas zamiifolia"],
+            controls:["Florfliegenlarven"],
+            products:["Florfliegenlarven"],
+            image:svgThumb({title:"Citrus-Wolllaus",subtitle:"Wollläuse",icon:"☁️",colors:["#fcfbfb","#efefef","#9ca3af"]})
+          },
+          {
+            name:"Langschwänzige Wolllaus",
+            recognition:"Watteartige Beläge mit deutlich längeren Fäden am Hinterkörper.",
+            effect:"Starke Schwächung, Honigtau und verschmutzte Pflanzen.",
+            affectedPlants:["Aglaonema Silver Bay","Monstera deliciosa","Sansevieria trifasciata","Spathiphyllum Sweet Chico"],
+            controls:["Florfliegenlarven"],
+            products:["Florfliegenlarven"],
+            image:svgThumb({title:"Langschwänzige Wolllaus",subtitle:"Wollläuse",icon:"☁️",colors:["#fcfbfb","#efefef","#8f99a7"]})
+          }
+        ]
+      }
+    ];
+
+    const products = [
+      {
+        name:"Florfliegenlarven",
+        type:"Nützling",
+        against:["Blattläuse","Citrus-Wolllaus","Deckelschildlaus","Langschwänzige Wolllaus","Napfschildlaus"],
+        dosage:"Je nach Befallsstärke und Pflanzenmenge staffeln; Anwendung nach internem Standard und Produktetikett.",
+        usage:"Direkt im Befallsbereich ausbringen. Pflanze vorher kontrollieren und stark verschmutzte Stellen reinigen.",
+        notes:"Biologische Bekämpfung; Einsatz möglichst frühzeitig beginnen. Temperatur und Kulturbedingungen beachten.",
+        image:svgThumb({title:"Florfliegenlarven",subtitle:"Biologischer Nützling",icon:"🪲",colors:["#f6fbef","#e2f1c9","#83a449"]})
+      },
+      {
+        name:"Nematoden",
+        type:"Nützling",
+        against:["Trauermücken"],
+        dosage:"Nach Wasseransatz und Flächenbedarf laut Produktangabe ansetzen.",
+        usage:"Über Gießwasser ausbringen. Substrat leicht feucht halten, damit der Wirkbereich erhalten bleibt.",
+        notes:"Vor allem sinnvoll bei Larven im Substrat. Nicht in ausgetrocknetes Substrat einsetzen.",
+        image:svgThumb({title:"Nematoden",subtitle:"Biologischer Nützling",icon:"💧",colors:["#eef7ff","#dbeaff","#5d8ec7"]})
+      },
+      {
+        name:"Raubmilben",
+        type:"Nützling",
+        against:["Gemeine Spinnmilbe","Kalifornischer Blütenthrips","Tabakthrips"],
+        dosage:"Nach Befallsdruck und Pflanzenanzahl dosieren; Karten oder Trägermaterial gezielt verteilen.",
+        usage:"Direkt an betroffene Pflanzen hängen oder streuen. Umgebung möglichst passend für Nützlinge halten.",
+        notes:"Sehr gut für frühe und mittlere Befallsstadien. Keine unsinnige Parallelbehandlung, die Nützlinge stören würde.",
+        image:svgThumb({title:"Raubmilben",subtitle:"Biologischer Nützling",icon:"🕷️",colors:["#f8f6ef","#ece5d1","#9a8557"]})
+      }
+    ];
+
+    const symptoms = [
+      {
+        name:"Blattfall",
+        cause:"Häufig Standortwechsel, Zugluft, Lichtmangel oder unruhige Pflege.",
+        immediate:"Standort stabil halten, Zugluft vermeiden und Gießrhythmus prüfen.",
+        linkedPests:[],
+        linkedProducts:[],
+        plants:["Ficus Amstel King","Ficus Bambino","Ficus Benjamina","Schefflera arboricola"],
+        image:svgThumb({title:"Blattfall",subtitle:"Pflanzenschaden",icon:"🍂",colors:["#fff7ef","#f7e5d6","#bd8662"]})
+      },
+      {
+        name:"Braune Flecken",
+        cause:"Sonnenbrand, Kälteschaden, Wasserflecken, Staunässe oder Saugschäden.",
+        immediate:"Standort, Wasserführung und mögliche Schädlinge prüfen.",
+        linkedPests:["Kalifornischer Blütenthrips","Tabakthrips"],
+        linkedProducts:["Raubmilben"],
+        plants:["Alocasia Cucullata","Anthurium andreanum","Ficus Bambino","Ficus Cyathistipula","Ficus Elastica","Monstera adansonii","Monstera deliciosa"],
+        image:svgThumb({title:"Braune Flecken",subtitle:"Pflanzenschaden",icon:"🟤",colors:["#fff6ef","#f6e2d4","#ae7758"]})
+      },
+      {
+        name:"Braune Spitzen",
+        cause:"Oft trockene Luft, Salzbelastung, unregelmäßiges Gießen oder Wasserqualität.",
+        immediate:"Pflege stabilisieren, Wasser prüfen und trockene Spitzen sauber zurücknehmen.",
+        linkedPests:[],
+        linkedProducts:[],
+        plants:["Chamaedorea elegans","Dracaena Janet Craig","Dracaena Lemon Lime","Dracaena Marginata","Howea forsteriana","Spathiphyllum Sweet Chico"],
+        image:svgThumb({title:"Braune Spitzen",subtitle:"Pflanzenschaden",icon:"✂️",colors:["#fff7ef","#f7e4d7","#b37c5c"]})
+      },
+      {
+        name:"Gelbe Blätter",
+        cause:"Zu viel Wasser, Lichtmangel, Nährstoffmangel oder Wurzelstress.",
+        immediate:"Wurzelbereich, Gießmenge und Standort prüfen.",
+        linkedPests:[],
+        linkedProducts:[],
+        plants:["Aglaonema Silver Bay","Alocasia Cucullata","Dracaena Janet Craig","Dracaena Lemon Lime","Epipremnum aureum","Ficus Amstel King","Ficus Benjamina","Ficus Elastica","Howea forsteriana","Monstera deliciosa","Schefflera arboricola","Spathiphyllum Sweet Chico","Zamioculcas zamiifolia"],
+        image:svgThumb({title:"Gelbe Blätter",subtitle:"Pflanzenschaden",icon:"🟡",colors:["#fffbe8","#f7efc2","#b59a35"]})
+      },
+      {
+        name:"Hängende Blätter",
+        cause:"Akuter Wassermangel, Wurzelschaden oder starker Standortstress.",
+        immediate:"Substrat prüfen, Wasserbedarf einschätzen und auf Staunässe achten.",
+        linkedPests:[],
+        linkedProducts:[],
+        plants:["Spathiphyllum Sweet Chico"],
+        image:svgThumb({title:"Hängende Blätter",subtitle:"Pflanzenschaden",icon:"🥀",colors:["#f7faef","#e8f0cf","#839a54"]})
+      },
+      {
+        name:"Lichtmangel",
+        cause:"Zu dunkler Standort, lange zu wenig Helligkeit.",
+        immediate:"Standort neu bewerten, Pflanze geeigneter einsetzen oder umstellen.",
+        linkedPests:[],
+        linkedProducts:[],
+        plants:["Dracaena Janet Craig","Epipremnum aureum","Ficus Amstel King","Ficus Benjamina","Monstera deliciosa"],
+        image:svgThumb({title:"Lichtmangel",subtitle:"Pflanzenschaden",icon:"🌑",colors:["#f4f5f7","#e4e8ed","#7b8594"]})
+      },
+      {
+        name:"Silbrige Blätter",
+        cause:"Typischer Hinweis auf Thripse.",
+        immediate:"Blätter auf Kotpunkte prüfen und Thrips-Steckbrief öffnen.",
+        linkedPests:["Kalifornischer Blütenthrips","Tabakthrips"],
+        linkedProducts:["Raubmilben"],
+        plants:["Anthurium andreanum","Dracaena Lemon Lime","Ficus Benjamina","Monstera deliciosa","Spathiphyllum Sweet Chico"],
+        image:svgThumb({title:"Silbrige Blätter",subtitle:"Pflanzenschaden",icon:"✨",colors:["#f7f9fb","#e6ebf2","#8c97a6"]})
+      },
+      {
+        name:"Staunässe",
+        cause:"Zu viel Wasser, fehlender Abzug oder falscher Rhythmus.",
+        immediate:"Wurzelbereich prüfen, Gießen stoppen, gegebenenfalls umtopfen oder austrocknen lassen.",
+        linkedPests:["Trauermücken"],
+        linkedProducts:["Nematoden"],
+        plants:["Aglaonema Silver Bay","Dracaena Marginata","Epipremnum aureum","Sansevieria trifasciata","Zamioculcas zamiifolia"],
+        image:svgThumb({title:"Staunässe",subtitle:"Pflanzenschaden",icon:"💧",colors:["#eef7ff","#dbeaff","#6190c5"]})
+      },
+      {
+        name:"Weiche Triebe",
+        cause:"Meist zu viel Wasser und faulende Wurzeln.",
+        immediate:"Sofort trockener stellen, Wurzeln kontrollieren und beschädigte Partien entfernen.",
+        linkedPests:[],
+        linkedProducts:[],
+        plants:["Dracaena Marginata","Sansevieria trifasciata","Zamioculcas zamiifolia"],
+        image:svgThumb({title:"Weiche Triebe",subtitle:"Pflanzenschaden",icon:"🫧",colors:["#eef7ff","#dceafe","#7da0cc"]})
+      }
+    ];
+
+    const knowledge = sortByName([
+      {
+        name:"Dokumentation nach dem Einsatz",
+        category:"Blueplant",
+        text:"Pflege, Auffälligkeiten, Austausch, Schädlingsbefall und besondere Hinweise sollen sauber und zeitnah in Blueplant erfasst werden.",
+        bullets:["Nicht erst am Ende der Woche nachtragen.","Auffälligkeiten nachvollziehbar formulieren.","Im Zweifel Problem melden."],
+        links:[{type:"section", target:"blueplant", label:"Blueplant öffnen"}]
+      },
+      {
+        name:"Hydrokultur-Service vor Ort",
+        category:"Pflegestandards",
+        text:"Wasserstandsanzeiger, Sauberkeit, Wurzelzustand und Gefäßoptik sind die wichtigsten Kontrollpunkte.",
+        bullets:["Nur bei Bedarf Wasser ergänzen.","Dünger nach internem Intervall dosieren.","Gefäß sauber hinterlassen."],
+        links:[]
+      },
+      {
+        name:"Pflanzenanlage professionell hinterlassen",
+        category:"Qualitätsstandard",
+        text:"Die Anlage soll nach dem Einsatz sichtbar gepflegt, sauber und ruhig wirken.",
+        bullets:["Lose Blätter und Rückschnitt entfernen.","Gefäße ausrichten und reinigen.","Werkzeug vollständig mitnehmen."],
+        links:[{type:"section", target:"customer", label:"Kundenauftritt"}]
+      },
+      {
+        name:"Pflanzentausch sauber durchführen",
+        category:"Montage & Austausch",
+        text:"Vor Transport Zustand prüfen, beim Einsetzen Ruhe bewahren und nach dem Tausch Standort und Pflege neu bewerten.",
+        bullets:["Pflanze vorab auf Schädlinge prüfen.","Material sauber vorbereiten.","Kundenbereich ordentlich verlassen."],
+        links:[{type:"section", target:"tools", label:"Werkzeuge & Maschinen"}]
+      },
+      {
+        name:"Pflegedurchgang logisch aufbauen",
+        category:"Pflegestandards",
+        text:"Zuerst Überblick verschaffen, dann Schäden und Schädlinge prüfen, danach gießen, schneiden und reinigen.",
+        bullets:["Nicht sofort blind gießen.","Erst Symptome und Schädlingsdruck erkennen.","Zum Schluss dokumentieren."],
+        links:[{type:"section", target:"checklists", label:"Checklisten öffnen"}]
+      },
+      {
+        name:"Schädlingsbefall früh erkennen",
+        category:"Pflanzenschutz",
+        text:"Je früher ein Befall erkannt wird, desto leichter ist eine biologische Bekämpfung möglich.",
+        bullets:["Blattober- und Unterseiten kontrollieren.","Junge Triebe und Blattachseln prüfen.","Bei Verdacht direkt Steckbrief öffnen."],
+        links:[{type:"section", target:"pests", label:"Schädlinge öffnen"}]
+      },
+      {
+        name:"Schnittreste und Verschmutzung vermeiden",
+        category:"Qualitätsstandard",
+        text:"Kleine Unordnung erzeugt schnell einen unprofessionellen Eindruck beim Kunden.",
+        bullets:["Schnittreste sofort entfernen.","Wasserflecken vermeiden.","Arbeitsbereich besser verlassen als vorgefunden."],
+        links:[{type:"section", target:"customer", label:"Auftreten beim Kunden"}]
+      }
+    ]);
+
+    const blueplantTopics = sortByName([
+      {
+        name:"Bestandsliste prüfen",
+        summary:"Material und Bestand sauber nachvollziehen, damit nichts verloren geht.",
+        action:"Wenn ein Eintrag fehlt oder unklar ist: Problem melden und nicht improvisieren."
+      },
+      {
+        name:"Dokumentation richtig durchführen",
+        summary:"Pflegegänge, Schäden, Schädlingsdruck und besondere Situationen sauber eintragen.",
+        action:"Kurz, sachlich und nachvollziehbar formulieren."
+      },
+      {
+        name:"Fehler im System",
+        summary:"Wenn etwas technisch nicht funktioniert oder Einträge nicht möglich sind.",
+        action:"Problem melden und den Vorfall zusätzlich intern notieren."
+      },
+      {
+        name:"Lauflisten kontrollieren",
+        summary:"Vor Start prüfen, ob Reihenfolge, Kunde und Einsatz stimmen.",
+        action:"Unstimmigkeiten nicht ignorieren, sondern direkt melden."
+      },
+      {
+        name:"Routenplanung nachvollziehen",
+        summary:"Route rechtzeitig prüfen und Unklarheiten vor Abfahrt lösen.",
+        action:"Bei fehlenden Infos Rücksprache halten, nicht schätzen."
+      }
+    ]);
+
+    const customerTopics = sortByName([
+      {
+        name:"Auftreten und Kleidung",
+        summary:"Sauberes, ordentliches und professionelles Erscheinungsbild.",
+        bullets:["Arbeitskleidung sauber halten.","Nicht schlampig oder hektisch auftreten.","Ruhig und respektvoll bleiben."]
+      },
+      {
+        name:"Kommunikation beim Kunden",
+        summary:"Kurz, freundlich und lösungsorientiert.",
+        bullets:["Nicht unnötig diskutieren.","Probleme sachlich erklären.","Niemals intern schlechtreden."]
+      },
+      {
+        name:"Ordnung am Arbeitsplatz",
+        summary:"Werkzeug, Material und Rückstände immer im Griff haben.",
+        bullets:["Nichts herumliegen lassen.","Laufwege frei halten.","Bereich sauber verlassen."]
+      },
+      {
+        name:"Reklamationen und Unsicherheit",
+        summary:"Nicht verteidigen, sondern ruhig aufnehmen und korrekt weitergeben.",
+        bullets:["Nicht spekulieren.","Nicht versprechen, was man nicht halten kann.","Falls nötig Problem melden."]
+      }
+    ]);
+
+    const toolTopics = sortByName([
+      {
+        name:"Balkenkran",
+        category:"Maschinen",
+        safety:"Nur von eingewiesenen Personen verwenden. Vor Einsatz Zustand, Tragfähigkeit und Einsatzumgebung prüfen.",
+        use:"Aufbau nach Herstellerangabe und interner Regel. Lasten nicht improvisiert bewegen.",
+        hint:"Später ideal mit PDF-Link zur Aufbauanleitung und Sicherheitsunterlage."
+      },
+      {
+        name:"Gerüst",
+        category:"Maschinen",
+        safety:"Aufbau nur nach Regeln und geeigneter Einweisung. Vor Nutzung auf sicheren Stand prüfen.",
+        use:"Nicht unsauber oder hastig aufbauen. Fehlende Teile nicht ersetzen oder umgehen.",
+        hint:"Später ideal mit PDF-Link zu Aufbau und AUVA-Hinweisen."
+      },
+      {
+        name:"Hubwagen",
+        category:"Transport",
+        safety:"Lasten kontrolliert bewegen, Wege freihalten und Kippgefahr vermeiden.",
+        use:"Nicht ruckartig fahren, Last richtig ansetzen und Umfeld beobachten.",
+        hint:"Für Mitarbeiter gut als Kurzstandard geeignet."
+      },
+      {
+        name:"Transporthilfen",
+        category:"Transport",
+        safety:"Belastung, Wege und Schwerpunkt beachten.",
+        use:"Pflanzen und Material standsicher transportieren.",
+        hint:"Besonders wichtig bei Kundeneinsätzen im Innenraum."
+      }
+    ]);
+
+    const trainingModules = sortByName([
+      {
+        name:"Blueplant sicher verwenden",
+        duration:"12 Min",
+        level:"Basis",
+        lessons:["Dokumentation richtig durchführen","Fehler erkennen","Problem korrekt melden"]
+      },
+      {
+        name:"Grundlagen Pflanzenpflege",
+        duration:"18 Min",
+        level:"Basis",
+        lessons:["Gießen richtig einschätzen","Lichtbedarf verstehen","Staunässe vermeiden"]
+      },
+      {
+        name:"Hydrokultur und Servicequalität",
+        duration:"14 Min",
+        level:"Praxis",
+        lessons:["Wasserstand lesen","Gefäße sauber halten","Anlage professionell hinterlassen"]
+      },
+      {
+        name:"Kundenauftritt im Außendienst",
+        duration:"10 Min",
+        level:"Basis",
+        lessons:["Freundliches Auftreten","Ordnung am Arbeitsplatz","Reklamationen sauber aufnehmen"]
+      },
+      {
+        name:"Schädlinge und Nützlinge",
+        duration:"20 Min",
+        level:"Praxis",
+        lessons:["Hauptgruppen erkennen","Biologisch bekämpfen","Steckbriefe richtig nutzen"]
+      },
+      {
+        name:"Werkzeuge und Sicherheit",
+        duration:"16 Min",
+        level:"Sicherheit",
+        lessons:["Gerüst und Balkenkran","Hubwagen","Verantwortung und Regeln"]
+      }
+    ]);
+
+    const videos = sortByName([
+      {
+        name:"Balkenkran sicher vorbereiten",
+        category:"Montage",
+        tags:["Balkenkran","Sicherheit","Werkzeuge"],
+        note:"Platzhalter für internes Video zum Aufbau und sicheren Einsatz."
+      },
+      {
+        name:"Blueplant nach dem Einsatz richtig ausfüllen",
+        category:"Blueplant",
+        tags:["Blueplant","Dokumentation","Service"],
+        note:"Platzhalter für internes Erklärungsvideo."
+      },
+      {
+        name:"Gerüst sauber und sicher aufbauen",
+        category:"Montage",
+        tags:["Gerüst","Sicherheit","Werkzeuge"],
+        note:"Platzhalter für internes Sicherheitsvideo."
+      },
+      {
+        name:"Hydrokultur-Service Schritt für Schritt",
+        category:"Pflege",
+        tags:["Hydrokultur","Pflege","Service"],
+        note:"Platzhalter für Lernvideo mit Standardablauf."
+      },
+      {
+        name:"Kalifornischen Blütenthrips erkennen",
+        category:"Pflanzenschutz",
+        tags:["Schädlinge","Thripse","Schnellhilfe"],
+        note:"Platzhalter für Schädlingsvideo."
+      },
+      {
+        name:"Kundenauftritt im Objekt",
+        category:"Kundenauftritt",
+        tags:["Auftreten","Kunde","Service"],
+        note:"Platzhalter für kurzes Trainingsvideo."
+      },
+      {
+        name:"Raubmilben richtig einsetzen",
+        category:"Pflanzenschutz",
+        tags:["Nützlinge","Raubmilben","Schädlinge"],
+        note:"Platzhalter für Nützlingsvideo."
+      },
+      {
+        name:"Spathiphyllum richtig einschätzen",
+        category:"Pflege",
+        tags:["Pflanzenarten","Pflege","Schnellhilfe"],
+        note:"Platzhalter für Pflanzensteckbrief-Video."
+      }
+    ]);
+
+    const checklists = [
+      {
+        name:"Service-Checkliste vor Ort",
+        items:[
+          "Gesamtüberblick über Anlage verschaffen",
+          "Pflanzen auf Schäden und Schädlinge prüfen",
+          "Wasserstand oder Substrat kontrollieren",
+          "Gelbe oder beschädigte Blätter entfernen",
+          "Standort und Licht bewerten",
+          "Gefäße und Bereich sauber hinterlassen",
+          "Auffälligkeiten in Blueplant dokumentieren"
+        ]
+      },
+      {
+        name:"Montage-Checkliste",
+        items:[
+          "Werkzeug vollständig prüfen",
+          "Geräte und Hilfsmittel sicher bereitstellen",
+          "Laufwege und Umfeld sichern",
+          "Pflanzen und Material kontrolliert transportieren",
+          "Montagebereich sauber hinterlassen"
+        ]
+      }
+    ];
+
+    const allPestItems = sortByName(pestGroups.flatMap(g => g.items).map(i => ({ ...i, group: pestGroups.find(pg => pg.items.includes(i)).group })));
+    const allPlantGroups = uniqSorted(plants.map(p => p.group));
+    const allProductNames = uniqSorted(products.map(p => p.name));
+    const allVideoCategories = ["Alle", ...uniqSorted(videos.map(v => v.category))];
+    const allVideoTags = ["Alle", ...uniqSorted(videos.flatMap(v => v.tags))];
+
+    function login(){
+      const pw = document.getElementById("password").value;
+      const error = document.getElementById("loginError");
+      if(pw === APP_PASSWORD){
+        document.getElementById("loginScreen").classList.add("hidden");
+        document.getElementById("appRoot").classList.remove("hidden");
+        error.classList.add("hidden");
+        renderMenu();
+        renderView();
+      }else{
+        error.classList.remove("hidden");
+      }
+    }
+
+    function logout(){
+      document.getElementById("appRoot").classList.add("hidden");
+      document.getElementById("loginScreen").classList.remove("hidden");
+      document.getElementById("password").value = "";
+    }
+
+    document.getElementById("password").addEventListener("keydown", e => {
+      if(e.key === "Enter") login();
+    });
+
+    function renderMenu(){
+      const el = document.getElementById("menuBar");
+      el.innerHTML = MENU_ORDER.map(item => `
+        <button class="nav-pill ${state.route === item.id ? "active" : ""}" onclick="go('${item.id}')">${item.label}</button>
+      `).join("");
+    }
+
+    function go(route){
+      state.route = route;
+      renderMenu();
+      renderView();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function goPlantGroup(group){
+      state.selectedPlantGroup = group;
+      go("plants");
+    }
+
+    function goPestGroup(group){
+      state.selectedPestGroup = group;
+      go("pests");
+    }
+
+    function escapeHtml(text){
+      return String(text)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;");
+    }
+
+    function lightIcon(light){
+      if(light === "Hell") return "☀️ Hell";
+      if(light === "Halbschatten") return "🌤 Halbschatten";
+      return "🌑 Schattig";
+    }
+
+    function renderView(){
+      const view = document.getElementById("view");
+      if(state.route === "home") view.innerHTML = homeView();
+      if(state.route === "quickhelp") view.innerHTML = quickHelpView();
+      if(state.route === "plants") view.innerHTML = plantsView();
+      if(state.route === "symptoms") view.innerHTML = symptomsView();
+      if(state.route === "pests") view.innerHTML = pestsView();
+      if(state.route === "products") view.innerHTML = productsView();
+      if(state.route === "knowledge") view.innerHTML = knowledgeView();
+      if(state.route === "blueplant") view.innerHTML = blueplantView();
+      if(state.route === "customer") view.innerHTML = customerView();
+      if(state.route === "tools") view.innerHTML = toolsView();
+      if(state.route === "training") view.innerHTML = trainingView();
+      if(state.route === "videos") view.innerHTML = videosView();
+      if(state.route === "checklists") view.innerHTML = checklistsView();
+    }
+
+    function homeView(){
+      return `
+        <div class="grid grid-2">
+          <div class="card hero">
+            <div class="hero-content">
+              <div style="max-width:620px;">
+                <div style="text-transform:uppercase;letter-spacing:.8px;font-size:12px;opacity:.9;margin-bottom:8px;">Interne Hilfe für den Außendienst</div>
+                <div style="font-size:34px;font-weight:bold;line-height:1.15;margin-bottom:10px;">Wissen direkt am Handy statt Rückfragen im Alltag</div>
+                <div style="line-height:1.65;color:#eef8ef;">
+                  Diese App soll Mitarbeiter selbstständiger, zuverlässiger und professioneller machen. Schäden, Schädlinge, Pflanzenarten, Nützlinge, Blueplant und Arbeitsstandards sind logisch miteinander vernetzt.
+                </div>
+                <div class="hero-badges">
+                  <span class="hero-badge">Schnellhilfe</span>
+                  <span class="hero-badge">Vernetzte Steckbriefe</span>
+                  <span class="hero-badge">Handyfreundlich</span>
+                </div>
+              </div>
+              <div class="hero-art">
+                <img src="${svgThumb({title:"AMMON KG Wissensdatenbank App",subtitle:"Pflanzen, Schäden, Schädlinge, Hilfe",icon:"🌿",colors:["#eaf6ed","#d4ebdb","#4f9867"]})}" alt="AMMON KG Wissensdatenbank App" style="width:100%;border-radius:22px;border:3px solid rgba(255,255,255,.14);box-shadow:0 12px 30px rgba(0,0,0,.12);" />
+              </div>
+            </div>
+          </div>
+
+          <div class="grid" style="gap:18px;">
+            <div class="card quick-box">
+              <div class="section-head">
+                <div>
+                  <h3>Direkter Einstieg</h3>
+                  <div class="muted">Für Mitarbeiter, die draußen sofort Hilfe brauchen.</div>
+                </div>
+              </div>
+              <div class="detail-actions">
+                <button class="btn btn-primary" style="width:auto;margin:0;" onclick="go('quickhelp')">🔎 Schnellhilfe öffnen</button>
+                <button class="ghost-btn" onclick="go('symptoms')">⚠️ Schäden prüfen</button>
+                <button class="ghost-btn" onclick="go('pests')">🐛 Schädlinge prüfen</button>
+              </div>
+            </div>
+
+            <div class="stats">
+              <div class="stat">
+                <strong>${allPlantGroups.length}</strong>
+                <div class="muted">Pflanzen-Hauptgruppen</div>
+              </div>
+              <div class="stat">
+                <strong>${allPestItems.length}</strong>
+                <div class="muted">Schädlings-Untergruppen</div>
+              </div>
+              <div class="stat">
+                <strong>${products.length}</strong>
+                <div class="muted">Pflanzenschutzmittel / Nützlinge</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="height:18px;"></div>
+
+        <div class="grid grid-3">
+          ${homeTile("🔎","Schnellhilfe","Problem an Pflanze oder Schädling schnell auflösen.","quickhelp")}
+          ${homeTile("🌿","Pflanzenarten","Hauptgruppe wählen, dann konkrete Pflanzenart öffnen.","plants")}
+          ${homeTile("⚠️","Pflanzenschäden","Symptome, Ursachen und Sofortmaßnahmen.","symptoms")}
+          ${homeTile("🐛","Schädlinge","Hauptgruppe → Untergruppe → Bekämpfung.","pests")}
+          ${homeTile("🧪","Pflanzenschutzmittel","Nützlinge und Anwendung als Steckbrief.","products")}
+          ${homeTile("📘","Wissensdatenbank","Standards und Arbeitshilfen für den Alltag.","knowledge")}
+          ${homeTile("📱","Blueplant","Fehlerhilfe, Dokumentation und Problem melden.","blueplant")}
+          ${homeTile("🤝","Auftreten beim Kunden","Sauberer, ruhiger und professioneller Eindruck.","customer")}
+          ${homeTile("🛠️","Werkzeuge & Maschinen","Gerüst, Balkenkran, Hubwagen und Sicherheit.","tools")}
+          ${homeTile("🎓","Schulungen","Kurze Lernmodule für neue und bestehende Mitarbeiter.","training")}
+          ${homeTile("🎥","Videos","Kategorien und Tags als Demo-Struktur.","videos")}
+          ${homeTile("✅","Checklisten","Einsätze standardisiert durchführen.","checklists")}
+        </div>
+
+        <div class="footer-note">Demo-Struktur für die spätere echte Firmen-App der AMMON KG.</div>
+      `;
+    }
+
+    function homeTile(icon,title,text,route){
+      return `
+        <div class="tile" onclick="go('${route}')">
+          <div class="tile-top">
+            <div>
+              <h3 style="margin:0 0 8px;">${title}</h3>
+              <p>${text}</p>
+            </div>
+            <div class="tile-icon">${icon}</div>
+          </div>
+          <small>Bereich öffnen →</small>
+        </div>
+      `;
+    }
+
+    function quickHelpView(){
+      const term = state.quickSearch.trim().toLowerCase();
+      const type = state.quickType;
+
+      const symptomHits = symptoms
+        .filter(s => (type === "Alle" || type === "Schaden") && s.name.toLowerCase().includes(term))
+        .map(s => ({ type:"Schaden", name:s.name, targetType:"symptom", target:s.name, subtitle:s.cause }));
+
+      const pestHits = allPestItems
+        .filter(p => (type === "Alle" || type === "Schädling") && p.name.toLowerCase().includes(term))
+        .map(p => ({ type:"Schädling", name:p.name, targetType:"pest", target:p.name, subtitle:p.group }));
+
+      const plantHits = plants
+        .filter(p => (type === "Alle" || type === "Pflanze") && p.name.toLowerCase().includes(term))
+        .map(p => ({ type:"Pflanze", name:p.name, targetType:"plant", target:p.name, subtitle:p.group }));
+
+      const results = sortByName([...symptomHits, ...pestHits, ...plantHits]);
+
+      return `
+        <button class="back-btn" onclick="go('home')">← Zurück</button>
+
+        <div class="card quick-box">
+          <div class="section-head">
+            <div>
+              <h2>Schnellhilfe</h2>
+              <div class="muted">Nach Schaden, Schädling oder Pflanze suchen und logisch weiterklicken.</div>
+            </div>
+          </div>
+
+          <div class="filters">
+            <input class="search" placeholder="z. B. silbrige Blätter, Thripse, Ficus Benjamina" value="${escapeHtml(state.quickSearch)}" oninput="state.quickSearch=this.value;renderView()" />
+            <select class="select" onchange="state.quickType=this.value;renderView()">
+              ${["Alle","Schaden","Schädling","Pflanze"].map(opt => `<option ${state.quickType===opt?"selected":""}>${opt}</option>`).join("")}
+            </select>
+          </div>
+
+          <div class="chip-row">
+            ${["Gelbe Blätter","Kalifornischer Blütenthrips","Ficus Benjamina","Langschwänzige Wolllaus","Staunässe","Zamioculcas zamiifolia"].map(q => `
+              <button class="chip" onclick="state.quickSearch='${q.replaceAll("'","\\'")}';renderView()">${q}</button>
+            `).join("")}
+          </div>
+        </div>
+
+        <div style="height:18px;"></div>
+
+        ${results.length ? `
+          <div class="grid grid-2">
+            ${results.map(r => `
+              <div class="list-row" onclick="${r.targetType==='symptom' ? `openSymptomDetail('${jsq(r.target)}')` : r.targetType==='pest' ? `openPestDetail('${jsq(r.target)}')` : `openPlantDetail('${jsq(r.target)}')`}">
+                <div>
+                  <div class="subline">${r.type}</div>
+                  <strong>${r.name}</strong>
+                  <div class="muted" style="margin-top:4px;">${r.subtitle}</div>
+                </div>
+                <div>→</div>
+              </div>
+            `).join("")}
+          </div>
+        ` : `<div class="empty">Keine Treffer. Suche allgemeiner oder nutze einen der Vorschläge oben.</div>`}
+      `;
+    }
+
+    function plantsView(){
+      const group = state.selectedPlantGroup || "";
+      const search = state.plantSearch.trim().toLowerCase();
+      const groups = allPlantGroups.filter(g => g.toLowerCase().includes(search));
+      const visiblePlants = sortByName(plants.filter(p => (!group || p.group === group) && (!search || p.name.toLowerCase().includes(search) || p.group.toLowerCase().includes(search))));
+
+      return `
+        <button class="back-btn" onclick="go('home')">← Zurück</button>
+
+        <div class="card">
+          <div class="section-head">
+            <div>
+              <h2>Pflanzenarten</h2>
+              <div class="muted">Hauptgruppe wählen, dann konkrete Pflanzenart als Steckbrief öffnen.</div>
+            </div>
+          </div>
+
+          <div class="filters">
+            <input class="search" placeholder="Pflanzenart oder Hauptgruppe suchen" value="${escapeHtml(state.plantSearch)}" oninput="state.plantSearch=this.value;renderView()" />
+          </div>
+
+          <div class="chip-row">
+            <button class="chip ${group===""?"active":""}" onclick="state.selectedPlantGroup='';renderView()">Alle Hauptgruppen</button>
+            ${groups.map(g => `
+              <button class="chip ${group===g?"active":""}" onclick="state.selectedPlantGroup='${jsq(g)}';renderView()">${g}</button>
+            `).join("")}
+          </div>
+        </div>
+
+        <div style="height:18px;"></div>
+
+        ${group ? `
+          <div class="card">
+            <div class="section-head">
+              <div>
+                <h3>${group}</h3>
+                <div class="muted">Untergruppen / konkrete Pflanzenarten, alphabetisch sortiert.</div>
+              </div>
+            </div>
+
+            <div class="grid grid-3">
+              ${visiblePlants.length ? visiblePlants.map(p => plantCard(p)).join("") : `<div class="empty">Keine Treffer in dieser Hauptgruppe.</div>`}
+            </div>
+          </div>
+        ` : `
+          <div class="grid grid-3">
+            ${allPlantGroups.map(g => `
+              <div class="mini-card" onclick="state.selectedPlantGroup='${jsq(g)}';renderView()">
+                <div class="mini-thumb">
+                  <img src="${svgThumb({title:g,subtitle:"Hauptgruppe",icon:"🌿",colors:["#eef8ef","#d9efdf","#4f9867"]})}" alt="${g}" style="width:100%;height:100%;object-fit:cover;" />
+                </div>
+                <div class="mini-content">
+                  <div class="subline">Hauptgruppe</div>
+                  <h3 style="margin:6px 0 8px;">${g}</h3>
+                  <div class="muted">${plants.filter(p => p.group===g).length} Untergruppen öffnen →</div>
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        `}
+      `;
+    }
+
+    function plantCard(p){
+      return `
+        <div class="mini-card" onclick="openPlantDetail('${jsq(p.name)}')">
+          <div class="mini-thumb">
+            <img src="${p.image}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;" />
+          </div>
+          <div class="mini-content">
+            <div class="subline">${p.group}</div>
+            <h3 style="margin:6px 0 10px;">${p.name}</h3>
+            <div class="light-pill">${lightIcon(p.light)}</div>
+            <div style="height:10px;"></div>
+            <div class="muted">${p.special}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function openPlantDetail(name){
+      const item = plants.find(p => p.name === name);
+      if(!item) return;
+      document.getElementById("view").innerHTML = plantDetailView(item);
+      window.scrollTo({ top:0, behavior:"smooth" });
+    }
+
+    function plantDetailView(item){
+      const relatedSymptoms = sortByName(symptoms.filter(s => s.plants.includes(item.name)));
+      const relatedPests = sortByName(allPestItems.filter(p => p.affectedPlants.includes(item.name)));
+
+      return `
+        <button class="back-btn" onclick="go('plants')">← Zurück zu Pflanzenarten</button>
+
+        <div class="detail-layout">
+          <div class="detail-sticky">
+            <div class="detail-thumb">
+              <div class="thumb-wrap">
+                <img src="${item.image}" alt="${item.name}" style="width:100%;display:block;" />
+              </div>
+              <div style="margin-top:14px;">
+                <div class="subline">${item.group}</div>
+                <h2 style="margin:6px 0 8px;">${item.name}</h2>
+                <div class="light-pill">${lightIcon(item.light)}</div>
+                <div class="detail-actions">
+                  <button class="ghost-btn" onclick="goPlantGroup('${jsq(item.group)}')">Hauptgruppe ${item.group}</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-main">
+            <div class="card">
+              <div class="detail-headline">
+                <div>
+                  <h2 style="margin:0 0 8px;">Steckbrief</h2>
+                  <div class="muted">Konkrete Pflanzenart mit den wichtigsten Hinweisen für Pflege und Fehlererkennung.</div>
+                </div>
+              </div>
+              <div class="kv">
+                <div class="kv-row"><strong>Wasserbedarf</strong><div>${item.water}</div></div>
+                <div class="kv-row"><strong>Besonderheit</strong><div>${item.special}</div></div>
+                <div class="kv-row"><strong>Pflegehinweis</strong><div>${item.care}</div></div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>Typische Pflanzenschäden</h3>
+              <div class="link-list">
+                ${relatedSymptoms.length ? relatedSymptoms.map(s => `<button class="link-chip" onclick="openSymptomDetail('${jsq(s.name)}')">${s.name}</button>`).join("") : `<div class="muted">Keine Demo-Einträge vorhanden.</div>`}
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>Typische Schädlinge</h3>
+              <div class="link-list">
+                ${relatedPests.length ? relatedPests.map(p => `<button class="link-chip" onclick="openPestDetail('${jsq(p.name)}')">${p.name}</button>`).join("") : `<div class="muted">Keine Demo-Einträge vorhanden.</div>`}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function symptomsView(){
+      const term = state.symptomSearch.trim().toLowerCase();
+      const filtered = sortByName(symptoms.filter(s => s.name.toLowerCase().includes(term)));
+
+      return `
+        <button class="back-btn" onclick="go('home')">← Zurück</button>
+
+        <div class="card">
+          <div class="section-head">
+            <div>
+              <h2>Pflanzenschäden</h2>
+              <div class="muted">Symptome öffnen und logisch zu Schädlingen oder Pflanzenschutzmitteln weitergehen.</div>
+            </div>
+          </div>
+          <div class="filters">
+            <input class="search" placeholder="Schaden suchen, z. B. gelbe Blätter oder silbrige Blätter" value="${escapeHtml(state.symptomSearch)}" oninput="state.symptomSearch=this.value;renderView()" />
+          </div>
+        </div>
+
+        <div style="height:18px;"></div>
+
+        <div class="grid grid-3">
+          ${filtered.map(s => `
+            <div class="mini-card" onclick="openSymptomDetail('${jsq(s.name)}')">
+              <div class="mini-thumb">
+                <img src="${s.image}" alt="${s.name}" style="width:100%;height:100%;object-fit:cover;" />
+              </div>
+              <div class="mini-content">
+                <h3 style="margin:0 0 8px;">${s.name}</h3>
+                <div class="muted">${s.cause}</div>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function openSymptomDetail(name){
+      const item = symptoms.find(s => s.name === name);
+      if(!item) return;
+      document.getElementById("view").innerHTML = symptomDetailView(item);
+      window.scrollTo({ top:0, behavior:"smooth" });
+    }
+
+    function symptomDetailView(item){
+      const relatedPests = sortByName(allPestItems.filter(p => item.linkedPests.includes(p.name)));
+      const relatedProducts = sortByName(products.filter(p => item.linkedProducts.includes(p.name)));
+      const affectedPlants = sortByName(plants.filter(p => item.plants.includes(p.name)));
+
+      return `
+        <button class="back-btn" onclick="go('symptoms')">← Zurück zu Pflanzenschäden</button>
+
+        <div class="detail-layout">
+          <div class="detail-sticky">
+            <div class="detail-thumb">
+              <div class="thumb-wrap">
+                <img src="${item.image}" alt="${item.name}" style="width:100%;display:block;" />
+              </div>
+              <div style="margin-top:14px;">
+                <h2 style="margin:0 0 8px;">${item.name}</h2>
+                <div class="muted">Pflanzenschaden / Symptom</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-main">
+            <div class="card">
+              <h3>Wahrscheinliche Ursache</h3>
+              <div class="muted">${item.cause}</div>
+            </div>
+
+            <div class="success">
+              <strong>Sofortmaßnahme</strong><br>
+              ${item.immediate}
+            </div>
+
+            <div class="card">
+              <h3>Mögliche Schädlinge</h3>
+              ${relatedPests.length ? `<div class="link-list">${relatedPests.map(p => `<button class="link-chip" onclick="openPestDetail('${jsq(p.name)}')">${p.name}</button>`).join("")}</div>` : `<div class="muted">Für dieses Symptom ist in der Demo kein direkter Schädling hinterlegt.</div>`}
+            </div>
+
+            <div class="card">
+              <h3>Passende Pflanzenschutzmittel / Nützlinge</h3>
+              ${relatedProducts.length ? `<div class="link-list">${relatedProducts.map(p => `<button class="link-chip" onclick="openProductDetail('${jsq(p.name)}')">${p.name}</button>`).join("")}</div>` : `<div class="muted">Kein direkter Produktlink hinterlegt.</div>`}
+            </div>
+
+            <div class="card">
+              <h3>Betroffene Pflanzen in der Demo</h3>
+              <div class="link-list">
+                ${affectedPlants.map(p => `<button class="link-chip" onclick="openPlantDetail('${jsq(p.name)}')">${p.name}</button>`).join("")}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function pestsView(){
+      const group = state.selectedPestGroup || "";
+      const term = state.pestSearch.trim().toLowerCase();
+      const groups = uniqSorted(pestGroups.map(g => g.group)).filter(g => g.toLowerCase().includes(term));
+      const items = sortByName(allPestItems.filter(p => (!group || p.group === group) && (!term || p.name.toLowerCase().includes(term) || p.group.toLowerCase().includes(term))));
+
+      return `
+        <button class="back-btn" onclick="go('home')">← Zurück</button>
+
+        <div class="card">
+          <div class="section-head">
+            <div>
+              <h2>Schädlinge</h2>
+              <div class="muted">Hauptgruppe wählen, dann konkrete Untergruppe öffnen. Alles alphabetisch sortiert.</div>
+            </div>
+          </div>
+
+          <div class="filters">
+            <input class="search" placeholder="Schädling oder Hauptgruppe suchen" value="${escapeHtml(state.pestSearch)}" oninput="state.pestSearch=this.value;renderView()" />
+          </div>
+
+          <div class="chip-row">
+            <button class="chip ${group===""?"active":""}" onclick="state.selectedPestGroup='';renderView()">Alle Hauptgruppen</button>
+            ${groups.map(g => `<button class="chip ${group===g?"active":""}" onclick="state.selectedPestGroup='${jsq(g)}';renderView()">${g}</button>`).join("")}
+          </div>
+        </div>
+
+        <div style="height:18px;"></div>
+
+        ${group ? `
+          <div class="card">
+            <div class="section-head">
+              <div>
+                <h3>${group}</h3>
+                <div class="muted">Untergruppen / konkrete Schädlinge</div>
+              </div>
+            </div>
+            <div class="grid grid-3">
+              ${items.length ? items.map(p => pestCard(p)).join("") : `<div class="empty">Keine Treffer in dieser Hauptgruppe.</div>`}
+            </div>
+          </div>
+        ` : `
+          <div class="grid grid-3">
+            ${sortByName(pestGroups, "group").map(g => `
+              <div class="mini-card" onclick="state.selectedPestGroup='${jsq(g.group)}';renderView()">
+                <div class="mini-thumb">
+                  <img src="${svgThumb({title:g.group,subtitle:"Hauptgruppe",icon:"🐛",colors:["#fff7ef","#f5e3d6","#b77d5d"]})}" alt="${g.group}" style="width:100%;height:100%;object-fit:cover;" />
+                </div>
+                <div class="mini-content">
+                  <div class="subline">Hauptgruppe</div>
+                  <h3 style="margin:6px 0 8px;">${g.group}</h3>
+                  <div class="muted">${g.items.length} Untergruppen öffnen →</div>
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        `}
+      `;
+    }
+
+    function pestCard(p){
+      return `
+        <div class="mini-card" onclick="openPestDetail('${jsq(p.name)}')">
+          <div class="mini-thumb">
+            <img src="${p.image}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;" />
+          </div>
+          <div class="mini-content">
+            <div class="subline">${p.group}</div>
+            <h3 style="margin:6px 0 8px;">${p.name}</h3>
+            <div class="muted">${p.recognition}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function openPestDetail(name){
+      const item = allPestItems.find(p => p.name === name);
+      if(!item) return;
+      document.getElementById("view").innerHTML = pestDetailView(item);
+      window.scrollTo({ top:0, behavior:"smooth" });
+    }
+
+    function pestDetailView(item){
+      const relatedPlants = sortByName(plants.filter(p => item.affectedPlants.includes(p.name)));
+      const relatedProducts = sortByName(products.filter(p => item.products.includes(p.name)));
+
+      return `
+        <button class="back-btn" onclick="go('pests')">← Zurück zu Schädlingen</button>
+
+        <div class="detail-layout">
+          <div class="detail-sticky">
+            <div class="detail-thumb">
+              <div class="thumb-wrap">
+                <img src="${item.image}" alt="${item.name}" style="width:100%;display:block;" />
+              </div>
+              <div style="margin-top:14px;">
+                <div class="subline">${item.group}</div>
+                <h2 style="margin:6px 0 8px;">${item.name}</h2>
+                <div class="detail-actions">
+                  <button class="ghost-btn" onclick="goPestGroup('${jsq(item.group)}')">Hauptgruppe ${item.group}</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-main">
+            <div class="card">
+              <h3>Erkennung</h3>
+              <div class="muted">${item.recognition}</div>
+            </div>
+
+            <div class="card">
+              <h3>Schadenbild</h3>
+              <div class="muted">${item.effect}</div>
+            </div>
+
+            <div class="card">
+              <h3>Biologische Bekämpfung</h3>
+              <div class="link-list">
+                ${relatedProducts.map(p => `<button class="link-chip" onclick="openProductDetail('${jsq(p.name)}')">${p.name}</button>`).join("")}
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>Typisch betroffene Pflanzen</h3>
+              <div class="link-list">
+                ${relatedPlants.map(p => `<button class="link-chip" onclick="openPlantDetail('${jsq(p.name)}')">${p.name}</button>`).join("")}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function productsView(){
+      const term = state.productSearch.trim().toLowerCase();
+      const filtered = sortByName(products.filter(p => p.name.toLowerCase().includes(term)));
+
+      return `
+        <button class="back-btn" onclick="go('home')">← Zurück</button>
+
+        <div class="card">
+          <div class="section-head">
+            <div>
+              <h2>Pflanzenschutzmittel</h2>
+              <div class="muted">Steckbriefe zu Nützlingen und Mitteln mit Dosierung, Anwendung und Verlinkungen.</div>
+            </div>
+          </div>
+          <div class="filters">
+            <input class="search" placeholder="Produkt oder Nützling suchen" value="${escapeHtml(state.productSearch)}" oninput="state.productSearch=this.value;renderView()" />
+          </div>
+        </div>
+
+        <div style="height:18px;"></div>
+
+        <div class="grid grid-3">
+          ${filtered.map(p => `
+            <div class="mini-card" onclick="openProductDetail('${jsq(p.name)}')">
+              <div class="mini-thumb">
+                <img src="${p.image}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;" />
+              </div>
+              <div class="mini-content">
+                <div class="subline">${p.type}</div>
+                <h3 style="margin:6px 0 8px;">${p.name}</h3>
+                <div class="muted">Gegen: ${p.against.join(", ")}</div>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function openProductDetail(name){
+      const item = products.find(p => p.name === name);
+      if(!item) return;
+      document.getElementById("view").innerHTML = productDetailView(item);
+      window.scrollTo({ top:0, behavior:"smooth" });
+    }
+
+    function productDetailView(item){
+      const relatedPests = sortByName(allPestItems.filter(p => item.against.includes(p.name)));
+
+      return `
+        <button class="back-btn" onclick="go('products')">← Zurück zu Pflanzenschutzmitteln</button>
+
+        <div class="detail-layout">
+          <div class="detail-sticky">
+            <div class="detail-thumb">
+              <div class="thumb-wrap">
+                <img src="${item.image}" alt="${item.name}" style="width:100%;display:block;" />
+              </div>
+              <div style="margin-top:14px;">
+                <div class="subline">${item.type}</div>
+                <h2 style="margin:6px 0 8px;">${item.name}</h2>
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-main">
+            <div class="card">
+              <h3>Geeignet gegen</h3>
+              <div class="link-list">
+                ${relatedPests.map(p => `<button class="link-chip" onclick="openPestDetail('${jsq(p.name)}')">${p.name}</button>`).join("")}
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>Dosierung</h3>
+              <div class="muted">${item.dosage}</div>
+            </div>
+
+            <div class="card">
+              <h3>Anwendung</h3>
+              <div class="muted">${item.usage}</div>
+            </div>
+
+            <div class="success">
+              <strong>Wichtiger Hinweis</strong><br>
+              ${item.notes}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function knowledgeView(){
+      return `
+        <button class="back-btn" onclick="go('home')">← Zurück</button>
+
+        <div class="card">
+          <div class="section-head">
+            <div>
+              <h2>Wissensdatenbank</h2>
+              <div class="muted">Standards, Hilfen und kurze Arbeitsanleitungen für den Alltag.</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="height:18px;"></div>
+
+        <div class="grid grid-2">
+          ${knowledge.map(item => `
+            <div class="card">
+              <div class="subline">${item.category}</div>
+              <h3>${item.name}</h3>
+              <div class="muted">${item.text}</div>
+              <ul class="clean">
+                ${item.bullets.map(b => `<li>${b}</li>`).join("")}
+              </ul>
+              ${item.links.length ? `
+                <div class="link-list">
+                  ${item.links.map(l => `<button class="link-chip" onclick="go('${l.target}')">${l.label}</button>`).join("")}
+                </div>
+              ` : ``}
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function blueplantView(){
+      return `
+        <button class="back-btn" onclick="go('home')">← Zurück</button>
+
+        <div class="grid grid-2">
+          <div class="card">
+            <div class="section-head">
+              <div>
+                <h2>Blueplant</h2>
+                <div class="muted">Anleitung und Hilfe für Pflegedokumentation, Lauflisten, Routenplanung und Bestände.</div>
+              </div>
+            </div>
+
+            <div class="list">
+              ${blueplantTopics.map(t => `
+                <div class="list-row" onclick="openBlueplantTopic('${jsq(t.name)}')">
+                  <div>
+                    <strong>${t.name}</strong>
+                    <div class="muted" style="margin-top:4px;">${t.summary}</div>
+                  </div>
+                  <div>→</div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+
+          <div class="card quick-box">
+            <h3>Problem melden</h3>
+            <div class="muted">
+              Wenn etwas in Blueplant unklar ist, technisch nicht funktioniert oder unterwegs ein Problem auftaucht, soll das nicht ignoriert werden.
+            </div>
+            <div class="detail-actions">
+              <a class="call-btn" href="tel:${phoneNumberTel}">📞 Problem melden</a>
+            </div>
+            <div class="muted" style="margin-top:12px;">Telefon: ${phoneNumberHuman}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function openBlueplantTopic(name){
+      const item = blueplantTopics.find(t => t.name === name);
+      if(!item) return;
+      document.getElementById("view").innerHTML = `
+        <button class="back-btn" onclick="go('blueplant')">← Zurück zu Blueplant</button>
+        <div class="grid grid-2">
+          <div class="card">
+            <h2>${item.name}</h2>
+            <div class="muted">${item.summary}</div>
+            <div class="success" style="margin-top:16px;"><strong>Was tun?</strong><br>${item.action}</div>
+          </div>
+          <div class="card quick-box">
+            <h3>Bei Unsicherheit</h3>
+            <div class="muted">Nicht schätzen, nicht auf später verschieben und keine falschen Einträge machen.</div>
+            <div class="detail-actions">
+              <a class="call-btn" href="tel:${phoneNumberTel}">📞 Problem melden</a>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function customerView(){
+      return `
+        <button class="back-btn" onclick="go('home')">← Zurück</button>
+        <div class="card">
+          <div class="section-head">
+            <div>
+              <h2>Richtiges professionelles Auftreten beim Kunden</h2>
+              <div class="muted">Einfach, direkt und auf den Alltag im Außendienst abgestimmt.</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="height:18px;"></div>
+
+        <div class="grid grid-2">
+          ${customerTopics.map(item => `
+            <div class="card">
+              <h3>${item.name}</h3>
+              <div class="muted">${item.summary}</div>
+              <ul class="clean">
+                ${item.bullets.map(b => `<li>${b}</li>`).join("")}
+              </ul>
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function toolsView(){
+      return `
+        <button class="back-btn" onclick="go('home')">← Zurück</button>
+        <div class="card">
+          <div class="section-head">
+            <div>
+              <h2>Werkzeuge & Maschinen</h2>
+              <div class="muted">Wichtige Kurzstandards zu Nutzung, Aufbau und Sicherheit. Später gut für PDF-Links geeignet.</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="height:18px;"></div>
+
+        <div class="grid grid-2">
+          ${toolTopics.map(item => `
+            <div class="card">
+              <div class="subline">${item.category}</div>
+              <h3>${item.name}</h3>
+              <div class="note"><strong>Sicherheit</strong><br>${item.safety}</div>
+              <div style="height:12px;"></div>
+              <div class="success"><strong>Nutzung</strong><br>${item.use}</div>
+              <div class="muted" style="margin-top:12px;">${item.hint}</div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function trainingView(){
+      return `
+        <button class="back-btn" onclick="go('home')">← Zurück</button>
+        <div class="card">
+          <div class="section-head">
+            <div>
+              <h2>Schulungen</h2>
+              <div class="muted">Kompakte Lernmodule für Einarbeitung und Standardisierung.</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="height:18px;"></div>
+
+        <div class="grid grid-2">
+          ${trainingModules.map(m => `
+            <div class="card">
+              <div class="detail-headline">
+                <div>
+                  <h3 style="margin:0 0 6px;">${m.name}</h3>
+                  <div class="muted">Niveau: ${m.level}</div>
+                </div>
+                <div class="pill">${m.duration}</div>
+              </div>
+              <ul class="clean">
+                ${m.lessons.map(l => `<li>${l}</li>`).join("")}
+              </ul>
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function videosView(){
+      const filtered = videos.filter(v => 
+        (state.selectedVideoCategory === "Alle" || v.category === state.selectedVideoCategory) &&
+        (state.selectedVideoTag === "Alle" || v.tags.includes(state.selectedVideoTag))
+      );
+
+      return `
+        <button class="back-btn" onclick="go('home')">← Zurück</button>
+
+        <div class="card">
+          <div class="section-head">
+            <div>
+              <h2>Videos</h2>
+              <div class="muted">Demo-Struktur mit Kategorien und Tags, damit ihr später entscheiden könnt, was euch besser gefällt.</div>
+            </div>
+          </div>
+
+          <div>
+            <div class="subline">Kategorien</div>
+            <div class="chip-row">
+              ${allVideoCategories.map(c => `<button class="chip ${state.selectedVideoCategory===c?"active":""}" onclick="state.selectedVideoCategory='${jsq(c)}';renderView()">${c}</button>`).join("")}
+            </div>
+          </div>
+
+          <div style="height:14px;"></div>
+
+          <div>
+            <div class="subline">Tags</div>
+            <div class="chip-row">
+              ${allVideoTags.map(t => `<button class="chip ${state.selectedVideoTag===t?"active":""}" onclick="state.selectedVideoTag='${jsq(t)}';renderView()">${t}</button>`).join("")}
+            </div>
+          </div>
+        </div>
+
+        <div style="height:18px;"></div>
+
+        <div class="grid grid-3">
+          ${filtered.map(v => `
+            <div class="mini-card">
+              <div class="mini-thumb">
+                <img src="${svgThumb({title:v.name,subtitle:v.category,icon:"🎥",colors:["#eef7ff","#dceaf9","#5f8fc1"]})}" alt="${v.name}" style="width:100%;height:100%;object-fit:cover;" />
+              </div>
+              <div class="mini-content">
+                <div class="subline">${v.category}</div>
+                <h3 style="margin:6px 0 8px;">${v.name}</h3>
+                <div class="muted">${v.note}</div>
+                <div class="chip-row" style="margin-top:12px;">
+                  ${sortByName(v.tags.map(tag => ({name:tag}))).map(t => `<span class="pill">${t.name}</span>`).join("")}
+                </div>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function checklistsView(){
+      return `
+        <button class="back-btn" onclick="go('home')">← Zurück</button>
+
+        <div class="card">
+          <div class="section-head">
+            <div>
+              <h2>Checklisten</h2>
+              <div class="muted">Einfache Standards, damit Einsätze nachvollziehbar und sauber ablaufen.</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="height:18px;"></div>
+
+        <div class="grid grid-2">
+          ${checklists.map(list => `
+            <div class="card">
+              <h3>${list.name}</h3>
+              <div style="display:grid;gap:10px;margin-top:14px;">
+                ${list.items.map(item => `
+                  <label class="list-row" style="cursor:default;">
+                    <div style="display:flex;align-items:center;gap:12px;">
+                      <input type="checkbox" />
+                      <span>${item}</span>
+                    </div>
+                  </label>
+                `).join("")}
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function jsq(str){
+      return String(str).replaceAll("\\","\\\\").replaceAll("'","\\'");
+    }
+  </script>
 </body>
 </html>
