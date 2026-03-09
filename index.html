@@ -1,985 +1,350 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AMMON KG WISSENSDATENBANK</title>
-  <style>
-    :root {
-      --green-900: #1e5c35;
-      --green-700: #2f7d32;
-      --green-600: #3f9b48;
-      --green-100: #e9f5eb;
-      --sage: #f3f8f3;
-      --cream: #fafcf9;
-      --slate-900: #1f2937;
-      --slate-700: #475569;
-      --slate-500: #64748b;
-      --slate-300: #cbd5e1;
-      --slate-200: #e2e8f0;
-      --white: #ffffff;
-      --shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
-      --radius: 20px;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AMMON KG Wissensdatenbank App</title>
 
-    * {
-      box-sizing: border-box;
-    }
+<style>
 
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: linear-gradient(180deg, var(--cream), var(--sage));
-      color: var(--slate-900);
-    }
+body{
+font-family:Arial;
+margin:0;
+background:#f4f7f4;
+}
 
-    .hidden {
-      display: none !important;
-    }
+header{
+background:#2f7d32;
+color:white;
+padding:15px;
+text-align:center;
+}
 
-    .app-shell {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+.container{
+padding:20px;
+}
 
-    .login-wrap {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      background:
-        radial-gradient(circle at top left, rgba(63,155,72,0.16), transparent 25%),
-        radial-gradient(circle at bottom right, rgba(47,125,50,0.16), transparent 25%),
-        linear-gradient(180deg, #f7fbf7, #eef6ef);
-    }
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+gap:15px;
+}
 
-    .login-card {
-      width: 100%;
-      max-width: 460px;
-      background: var(--white);
-      border-radius: 28px;
-      box-shadow: var(--shadow);
-      padding: 32px;
-      border: 1px solid rgba(47,125,50,0.12);
-    }
+.card{
+background:white;
+border-radius:10px;
+padding:15px;
+box-shadow:0 3px 10px rgba(0,0,0,0.1);
+cursor:pointer;
+}
 
-    .logo-row {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 18px;
-    }
+.card:hover{
+transform:scale(1.03);
+}
 
-    .logo-badge {
-      width: 58px;
-      height: 58px;
-      border-radius: 18px;
-      background: linear-gradient(135deg, var(--green-700), var(--green-600));
-      color: white;
-      display: grid;
-      place-items: center;
-      font-size: 28px;
-      font-weight: bold;
-      box-shadow: 0 8px 20px rgba(47,125,50,0.22);
-    }
+.hidden{
+display:none;
+}
 
-    h1, h2, h3, h4, p {
-      margin-top: 0;
-    }
+button{
+padding:10px 15px;
+border:none;
+border-radius:8px;
+background:#2f7d32;
+color:white;
+cursor:pointer;
+}
 
-    .subtle {
-      color: var(--slate-500);
-      line-height: 1.5;
-    }
+input{
+padding:10px;
+width:100%;
+margin-top:10px;
+border-radius:8px;
+border:1px solid #ccc;
+}
 
-    .input {
-      width: 100%;
-      border: 1px solid var(--slate-300);
-      border-radius: 14px;
-      padding: 14px 16px;
-      font-size: 16px;
-      outline: none;
-      transition: 0.2s ease;
-      margin-top: 8px;
-    }
+.back{
+margin-bottom:20px;
+}
 
-    .input:focus {
-      border-color: var(--green-600);
-      box-shadow: 0 0 0 4px rgba(63,155,72,0.12);
-    }
-
-    .btn {
-      border: 0;
-      border-radius: 14px;
-      padding: 14px 18px;
-      font-size: 15px;
-      cursor: pointer;
-      transition: 0.2s ease;
-      font-weight: bold;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--green-700), var(--green-600));
-      color: var(--white);
-      width: 100%;
-      margin-top: 16px;
-      box-shadow: 0 10px 18px rgba(47,125,50,0.2);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-1px);
-    }
-
-    .hint-box {
-      margin-top: 18px;
-      background: var(--green-100);
-      border-radius: 18px;
-      padding: 14px 16px;
-      color: var(--green-900);
-      font-size: 14px;
-    }
-
-    .error {
-      margin-top: 12px;
-      color: #b91c1c;
-      font-size: 14px;
-      font-weight: bold;
-    }
-
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      background: rgba(255,255,255,0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(15,23,42,0.08);
-    }
-
-    .topbar {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 18px 20px 14px;
-    }
-
-    .topbar-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .tag {
-      background: var(--green-100);
-      color: var(--green-900);
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-size: 13px;
-      font-weight: bold;
-    }
-
-    .nav-tabs {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 14px;
-    }
-
-    .tab {
-      border: 1px solid var(--slate-200);
-      background: white;
-      color: var(--slate-700);
-      padding: 10px 14px;
-      border-radius: 999px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: bold;
-    }
-
-    .tab.active {
-      background: var(--green-700);
-      color: white;
-      border-color: var(--green-700);
-    }
-
-    main {
-      max-width: 1200px;
-      margin: 0 auto;
-      width: 100%;
-      padding: 24px 20px 50px;
-    }
-
-    .grid {
-      display: grid;
-      gap: 18px;
-    }
-
-    .grid-2 {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .grid-3 {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .grid-4 {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
-    .card {
-      background: var(--white);
-      border-radius: var(--radius);
-      padding: 20px;
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(15,23,42,0.05);
-    }
-
-    .hero {
-      background: linear-gradient(135deg, var(--green-900), var(--green-600));
-      color: white;
-      position: relative;
-      overflow: hidden;
-      min-height: 220px;
-    }
-
-    .hero::after {
-      content: "";
-      position: absolute;
-      right: -60px;
-      top: -40px;
-      width: 220px;
-      height: 220px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.08);
-    }
-
-    .hero img {
-      width: 100%;
-      max-width: 260px;
-      border-radius: 18px;
-      object-fit: cover;
-      border: 3px solid rgba(255,255,255,0.18);
-    }
-
-    .hero-wrap {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    .badge-row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 14px;
-    }
-
-    .badge {
-      background: rgba(255,255,255,0.14);
-      color: white;
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-size: 13px;
-      font-weight: bold;
-    }
-
-    .mini-stat {
-      font-size: 28px;
-      font-weight: bold;
-      margin-bottom: 4px;
-    }
-
-    .icon-top {
-      font-size: 34px;
-      margin-bottom: 12px;
-    }
-
-    .section-title {
-      font-size: 24px;
-      margin-bottom: 6px;
-    }
-
-    .search-row, .filter-row {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 14px;
-    }
-
-    .select {
-      min-width: 220px;
-      border: 1px solid var(--slate-300);
-      border-radius: 14px;
-      padding: 13px 14px;
-      background: white;
-      font-size: 15px;
-    }
-
-    .pill {
-      display: inline-block;
-      background: var(--green-100);
-      color: var(--green-900);
-      border-radius: 999px;
-      padding: 6px 10px;
-      font-size: 12px;
-      font-weight: bold;
-      margin-right: 6px;
-      margin-bottom: 6px;
-    }
-
-    .article-steps {
-      padding-left: 18px;
-      color: var(--slate-700);
-      line-height: 1.55;
-    }
-
-    .video-thumb {
-      border-radius: 16px;
-      overflow: hidden;
-      height: 180px;
-      background: #dfe9df;
-      margin-bottom: 14px;
-    }
-
-    .video-thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .video-btn {
-      display: inline-block;
-      margin-top: 12px;
-      background: #dc2626;
-      color: white;
-      text-decoration: none;
-      padding: 11px 14px;
-      border-radius: 12px;
-      font-weight: bold;
-      font-size: 14px;
-    }
-
-    .check-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 14px;
-      border-radius: 16px;
-      border: 1px solid var(--slate-200);
-      margin-bottom: 12px;
-      background: #fbfdfb;
-    }
-
-    .check-item input {
-      width: 18px;
-      height: 18px;
-    }
-
-    .footer-note {
-      margin-top: 24px;
-      text-align: center;
-      color: var(--slate-500);
-      font-size: 14px;
-    }
-
-    @media (max-width: 920px) {
-      .grid-4, .grid-3, .grid-2 {
-        grid-template-columns: 1fr;
-      }
-
-      .hero-wrap {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .hero img {
-        max-width: 100%;
-      }
-
-      .select {
-        min-width: 100%;
-      }
-    }
-  </style>
+</style>
 </head>
+
 <body>
-  <div id="loginScreen" class="login-wrap">
-    <div class="login-card">
-      <div class="logo-row">
-        <div class="logo-badge">🌿</div>
-        <div>
-          <h1 style="margin-bottom:6px;">AMMON KG Grünwissen</h1>
-          <p class="subtle" style="margin-bottom:0;">Demo einer internen Wissens- und Schulungsapp für Innenraumbegrünung</p>
-        </div>
-      </div>
 
-      <div class="card" style="padding:18px; border-radius:18px; background:linear-gradient(135deg,#f7fcf7,#eef7ef); box-shadow:none; margin-bottom:18px;">
-        <strong>Was du hier testen kannst</strong>
-        <p class="subtle" style="margin:8px 0 0;">Login, Navigation, Wissensartikel, Pflanzenschäden, Schädlingshilfe, Schulungsmodule, Videos und Service-Checkliste.</p>
-      </div>
+<!-- LOGIN -->
 
-      <label for="password"><strong>Demo-Passwort</strong></label>
-      <input id="password" class="input" type="password" placeholder="Passwort eingeben" />
-      <button class="btn btn-primary" onclick="login()">Einloggen</button>
-      <div id="errorMsg" class="error hidden">Falsches Passwort. Für die Demo: Ammon1913</div>
+<div id="login">
 
-      <div class="hint-box">
-        <strong>Hinweis:</strong> Diese Version ist bewusst eine vorzeigbare Demo. Inhalte, Bilder, Pflanzenarten und Texte können später jederzeit erweitert oder angepasst werden.
-      </div>
-    </div>
-  </div>
+<header>
+<h2>AMMON KG Wissensdatenbank App</h2>
+</header>
 
-  <div id="appScreen" class="app-shell hidden">
-    <header>
-      <div class="topbar">
-        <div class="topbar-row">
-          <div>
-            <h2 style="margin-bottom:4px;">AMMON KG · Interne Wissensdatenbank</h2>
-            <p class="subtle" style="margin-bottom:0;">Schnelle Hilfe für Pflege, Schadbilder, Schädlinge und Einarbeitung</p>
-          </div>
-          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-            <div class="tag">Demo-Version</div>
-            <button class="tab" onclick="logout()">Logout</button>
-          </div>
-        </div>
+<div class="container">
 
-        <div class="nav-tabs">
-          <button class="tab active" data-tab="start" onclick="showTab('start')">Start</button>
-          <button class="tab" data-tab="wissen" onclick="showTab('wissen')">Wissensdatenbank</button>
-          <button class="tab" data-tab="schaeden" onclick="showTab('schaeden')">Pflanzenschäden</button>
-          <button class="tab" data-tab="schaedlinge" onclick="showTab('schaedlinge')">Schädlinge</button>
-          <button class="tab" data-tab="schulung" onclick="showTab('schulung')">Schulungen</button>
-          <button class="tab" data-tab="videos" onclick="showTab('videos')">Videos</button>
-          <button class="tab" data-tab="checkliste" onclick="showTab('checkliste')">Checkliste</button>
-        </div>
-      </div>
-    </header>
+<p>
+Willkommen in der internen Wissensdatenbank der AMMON KG.  
+Hier findest du alle wichtigen Informationen zur Pflanzenpflege,
+Schadbildern, Schädlingen, Werkzeugen und Arbeitsabläufen.
+</p>
 
-    <main>
-      <section id="tab-start" class="tab-panel">
-        <div class="grid grid-2">
-          <div class="card hero">
-            <div class="hero-wrap">
-              <div style="max-width:620px; position:relative; z-index:1;">
-                <p style="opacity:0.85; font-size:13px; text-transform:uppercase; letter-spacing:1px;">Interne App-Demo</p>
-                <h2 style="font-size:34px; margin-bottom:10px;">Professionelles Wissen direkt am Diensthandy</h2>
-                <p style="line-height:1.6; color:#edf8ed;">
-                  Diese Demo zeigt, wie Mitarbeiter bei AMMON KG schnell nachsehen können, wie Arbeiten fachlich korrekt ausgeführt werden, welche Schäden vorliegen und welche Sofortmaßnahmen sinnvoll sind.
-                </p>
-                <div class="badge-row">
-                  <span class="badge">Android-tauglich</span>
-                  <span class="badge">Passwortschutz</span>
-                  <span class="badge">Später erweiterbar</span>
-                </div>
-              </div>
-              <img src="https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=900&q=80" alt="Innenraumbegrünung" />
-            </div>
-          </div>
+<input type="password" id="password" placeholder="Passwort eingeben">
 
-          <div class="grid" style="gap:18px;">
-            <div class="card">
-              <div class="mini-stat">7 Bereiche</div>
-              <p style="margin:0 0 8px;"><strong>Zum Vorzeigen</strong></p>
-              <p class="subtle" style="margin-bottom:0;">
-                Navigation, Inhalte, Videos, Filter und Checklisten sind schon als Muster vorhanden.
-              </p>
-            </div>
+<button onclick="login()">Einloggen</button>
 
-            <div class="card">
-              <div class="mini-stat">Einfach erweiterbar</div>
-              <p style="margin:0 0 8px;"><strong>Ideal für euren Start</strong></p>
-              <p class="subtle" style="margin-bottom:0;">
-                Neue Pflanzenarten, Schadbilder, Videos und Arbeitsanleitungen können später jederzeit ergänzt werden.
-              </p>
-            </div>
-          </div>
-        </div>
+<p id="error" style="color:red;"></p>
 
-        <div class="grid grid-4" style="margin-top:18px;">
-          <div class="card">
-            <div class="icon-top">📘</div>
-            <h3>Wissensdatenbank</h3>
-            <p class="subtle">Pflegestandards, Serviceabläufe, Hydrokultur, Moosbilder und Kundentermine.</p>
-          </div>
+</div>
 
-          <div class="card">
-            <div class="icon-top">🌿</div>
-            <h3>Pflanzenschäden</h3>
-            <p class="subtle">Filterbare Schnellhilfe nach Pflanzenart und Schadbild.</p>
-          </div>
+</div>
 
-          <div class="card">
-            <div class="icon-top">🐛</div>
-            <h3>Schädlingshilfe</h3>
-            <p class="subtle">Erkennung, Behandlung und Vorbeugung für häufige Schädlinge.</p>
-          </div>
+<!-- APP -->
 
-          <div class="card">
-            <div class="icon-top">🎓</div>
-            <h3>Schulungsbereich</h3>
-            <p class="subtle">Ideal für neue Mitarbeiter und einheitliche interne Standards.</p>
-          </div>
-        </div>
+<div id="app" class="hidden">
 
-        <div class="grid grid-2" style="margin-top:18px;">
-          <div class="card">
-            <h3>Was die Demo zeigt</h3>
-            <ul class="article-steps">
-              <li>Wie eure Inhalte in einer sauberen Firmen-App aussehen können</li>
-              <li>Wie Mitarbeiter schnell Hilfe im Alltag finden</li>
-              <li>Wie Schulungen und Videos gebündelt werden können</li>
-              <li>Dass man klein starten und später weiter ausbauen kann</li>
-            </ul>
-          </div>
+<header>
+<h2>AMMON KG Wissensdatenbank</h2>
+</header>
 
-          <div class="card">
-            <h3>Günstiger Start möglich</h3>
-            <ul class="article-steps">
-              <li>Android only</li>
-              <li>Ein gemeinsamer Login</li>
-              <li>APK-Verteilung per QR-Code</li>
-              <li>Keine komplizierten Benutzerkonten nötig</li>
-            </ul>
-          </div>
-        </div>
-      </section>
+<div class="container">
 
-      <section id="tab-wissen" class="tab-panel hidden">
-        <div class="card">
-          <h2 class="section-title">Wissensdatenbank</h2>
-          <p class="subtle">Suche nach Themen, Standards oder Schlagwörtern.</p>
-          <div class="search-row">
-            <input id="knowledgeSearch" class="input" placeholder="z. B. Hydrokultur, Kundentermin, Moosbild" oninput="renderKnowledge()" />
-          </div>
-        </div>
-        <div id="knowledgeList" class="grid grid-2" style="margin-top:18px;"></div>
-      </section>
+<div class="grid">
 
-      <section id="tab-schaeden" class="tab-panel hidden">
-        <div class="card">
-          <h2 class="section-title">Pflanzenschäden</h2>
-          <p class="subtle">Nach Pflanzenart und Symptom filtern.</p>
-          <div class="filter-row">
-            <select id="plantFilter" class="select" onchange="renderIssues()"></select>
-            <select id="symptomFilter" class="select" onchange="renderIssues()"></select>
-          </div>
-        </div>
-        <div id="issuesList" class="grid grid-2" style="margin-top:18px;"></div>
-      </section>
+<div class="card" onclick="openPage('schnellhilfe')">
+<h3>🔎 Schnellhilfe</h3>
+<p>Schnell Lösungen für Schäden oder Schädlinge finden.</p>
+</div>
 
-      <section id="tab-schaedlinge" class="tab-panel hidden">
-        <div id="pestList" class="grid grid-2"></div>
-      </section>
+<div class="card" onclick="openPage('pflanzen')">
+<h3>🌿 Pflanzenarten</h3>
+<p>Steckbriefe der wichtigsten Pflanzen.</p>
+</div>
 
-      <section id="tab-schulung" class="tab-panel hidden">
-        <div class="grid grid-2" id="trainingList"></div>
-      </section>
+<div class="card" onclick="openPage('schaeden')">
+<h3>⚠️ Pflanzenschäden</h3>
+<p>Gelbe Blätter, Flecken und andere Probleme erkennen.</p>
+</div>
 
-      <section id="tab-videos" class="tab-panel hidden">
-        <div class="grid grid-3" id="videoList"></div>
-      </section>
+<div class="card" onclick="openPage('schaedlinge')">
+<h3>🐛 Schädlinge</h3>
+<p>Schädlinge erkennen und bekämpfen.</p>
+</div>
 
-      <section id="tab-checkliste" class="tab-panel hidden">
-        <div class="card" style="max-width:760px;">
-          <h2 class="section-title">Service-Checkliste vor Ort</h2>
-          <p class="subtle">Ein einfacher Standard, damit Kundentermine sauber und professionell durchgeführt werden.</p>
-          <div id="checklistBox"></div>
-        </div>
-      </section>
+<div class="card" onclick="openPage('schutz')">
+<h3>🧪 Pflanzenschutzmittel</h3>
+<p>Nützlinge und Bekämpfungsmethoden.</p>
+</div>
 
-      <p class="footer-note">AMMON KG Demo · Inhalte dienen als Beispiel und können später gemeinsam verfeinert werden.</p>
-    </main>
-  </div>
+<div class="card" onclick="openPage('blueplant')">
+<h3>📱 Blueplant</h3>
+<p>Hilfe zur Pflegedokumentation.</p>
+</div>
 
-  <script>
-    const DEMO_PASSWORD = "Ammon1913";
+<div class="card" onclick="openPage('werkzeug')">
+<h3>🛠 Werkzeuge</h3>
+<p>Gerüst, Balkenkran und Geräte.</p>
+</div>
 
-    const knowledge = [
-      {
-        category: "Pflegegrundlagen",
-        title: "Gießkontrolle bei Innenraumbegrünung",
-        summary: "So wird professionell geprüft, ob wirklich gegossen werden muss.",
-        tags: ["Gießen", "Pflege", "Standard"],
-        steps: [
-          "Feuchtigkeit im Wurzelbereich prüfen, nicht nur an der Oberfläche.",
-          "Topfgewicht und Substrat beurteilen.",
-          "Licht, Temperatur und Standort mit einbeziehen.",
-          "Nur bedarfsgerecht gießen und überschüssiges Wasser entfernen.",
-          "Auffälligkeiten direkt festhalten."
-        ]
-      },
-      {
-        category: "Hydrokultur",
-        title: "Hydrokultur-Service vor Ort",
-        summary: "Routine für Kontrolle, Reinigung und Wasserstand bei Hydrokulturgefäßen.",
-        tags: ["Hydrokultur", "Service"],
-        steps: [
-          "Wasserstandsanzeiger ablesen.",
-          "Blähton und Wurzelbereich auf Geruch und Verschmutzung prüfen.",
-          "Nur bei Bedarf Wasser ergänzen.",
-          "Düngung nach internem Intervall ausführen.",
-          "Gefäß außen sauber hinterlassen."
-        ]
-      },
-      {
-        category: "Kundenservice",
-        title: "Standardablauf beim Kundentermin",
-        summary: "So wirken Einsätze ruhig, professionell und nachvollziehbar.",
-        tags: ["Kunde", "Qualität", "Auftreten"],
-        steps: [
-          "Freundlich melden und kurzen Überblick verschaffen.",
-          "Pflanzenbestand priorisiert prüfen.",
-          "Pflege, Rückschnitt, Reinigung und Schadenskontrolle durchführen.",
-          "Auffälligkeiten dokumentieren.",
-          "Arbeitsbereich sauber verlassen."
-        ]
-      },
-      {
-        category: "Pflanzentausch",
-        title: "Pflanzentausch ohne Stress für die Pflanze",
-        summary: "Sauberer Ablauf für Transport, Wechsel und Nachpflege.",
-        tags: ["Tausch", "Transport"],
-        steps: [
-          "Pflanze vor dem Transport auf Schäden und Schädlinge prüfen.",
-          "Wurzelballen stabil und sicher transportieren.",
-          "Gefäß und Material vorab sauber vorbereiten.",
-          "Nach dem Einsetzen Standort und Wasserbedarf neu einschätzen.",
-          "Kunden bei Bedarf kurz informieren."
-        ]
-      },
-      {
-        category: "Moosbilder & Grünwände",
-        title: "Pflegehinweise für konservierte Moosbilder",
-        summary: "Konserviertes Moos braucht andere Aufmerksamkeit als lebende Pflanzen.",
-        tags: ["Moosbild", "Wandgrün"],
-        steps: [
-          "Nicht gießen.",
-          "Vor direkter Sonne und Heizungsnähe schützen.",
-          "Raumklima beobachten.",
-          "Staub nur trocken und vorsichtig entfernen.",
-          "Beschädigte Stellen dokumentieren."
-        ]
-      },
-      {
-        category: "Qualitätsstandard",
-        title: "So hinterlassen wir Pflanzenanlagen professionell",
-        summary: "Kleine Details erzeugen beim Kunden einen starken Eindruck.",
-        tags: ["Qualität", "Abschluss"],
-        steps: [
-          "Lose Blätter und Schnittreste entfernen.",
-          "Gefäßränder und sichtbare Flächen abwischen.",
-          "Pflanzen ausrichten und optisch kontrollieren.",
-          "Werkzeug mitnehmen und Bereich ordentlich verlassen.",
-          "Offene Fragen intern weitergeben."
-        ]
-      }
-    ];
+<div class="card" onclick="openPage('kunden')">
+<h3>🤝 Kundenauftritt</h3>
+<p>Professionelles Verhalten beim Kunden.</p>
+</div>
 
-    const issues = [
-      {
-        plant: "Spathiphyllum",
-        symptom: "Gelbe Blätter",
-        cause: "Häufig Staunässe, Lichtmangel oder Nährstoffmangel.",
-        action: "Wurzelbereich prüfen, Gießmenge reduzieren, Standort kontrollieren und Pflegeintervall anpassen."
-      },
-      {
-        plant: "Ficus benjamina",
-        symptom: "Blattfall",
-        cause: "Standortwechsel, Zugluft, Lichtmangel oder unregelmäßiges Gießen.",
-        action: "Standort stabil halten, Licht verbessern, Gießen ausgleichen und Zugluft vermeiden."
-      },
-      {
-        plant: "Dracaena",
-        symptom: "Braune Blattspitzen",
-        cause: "Trockene Luft, Salzbelastung oder schwankende Wasserversorgung.",
-        action: "Luftfeuchtigkeit verbessern, Wasserqualität prüfen und gleichmäßiger pflegen."
-      },
-      {
-        plant: "Monstera",
-        symptom: "Braune Flecken",
-        cause: "Sonnenbrand, Kälteschaden oder Staunässe.",
-        action: "Direkte Sonne vermeiden, Standort kontrollieren und Wurzelbereich prüfen."
-      },
-      {
-        plant: "Zamioculcas",
-        symptom: "Weiche Triebe",
-        cause: "Zu viel Wasser und faulender Wurzelbereich.",
-        action: "Sofort trockener stellen, Wurzeln kontrollieren und sparsamer gießen."
-      },
-      {
-        plant: "Kentia",
-        symptom: "Braune Spitzen",
-        cause: "Trockene Raumluft oder unregelmäßiges Gießen.",
-        action: "Pflege stabilisieren, abgestorbene Spitzen sauber zurücknehmen und Luftfeuchte beachten."
-      }
-    ];
+<div class="card" onclick="openPage('schulung')">
+<h3>🎓 Schulungen</h3>
+<p>Wichtige Lerninhalte für Mitarbeiter.</p>
+</div>
 
-    const pests = [
-      {
-        name: "Thripse",
-        recognition: "Silbrige Blattstellen, feine Punkte, verformte junge Blätter.",
-        treatment: "Befall isolieren, Blätter kontrollieren, geeignete interne Maßnahme anwenden und Nachkontrolle einplanen.",
-        prevention: "Regelmäßige Blattkontrolle, vitale Pflanzen, Neuzugänge prüfen."
-      },
-      {
-        name: "Spinnmilben",
-        recognition: "Feine Gespinste, helle Sprenkel, matte Blätter.",
-        treatment: "Luftfeuchtigkeit verbessern, befallene Bereiche behandeln und Folgetermin einplanen.",
-        prevention: "Trockene Luft reduzieren, Unterseiten regelmäßig prüfen."
-      },
-      {
-        name: "Schildläuse",
-        recognition: "Braune Schilder an Trieben und Blattunterseiten, klebrige Beläge.",
-        treatment: "Mechanisch entfernen und interne Behandlungsroutine umsetzen.",
-        prevention: "Früherkennung und regelmäßige Sichtkontrolle."
-      },
-      {
-        name: "Trauermücken",
-        recognition: "Kleine schwarze Fliegen am Substrat, meist bei zu feuchter Erde.",
-        treatment: "Gießmenge senken, Oberfläche abtrocknen lassen und Larven gezielt bekämpfen.",
-        prevention: "Staunässe vermeiden und Gießrhythmus anpassen."
-      }
-    ];
+<div class="card" onclick="openPage('videos')">
+<h3>🎥 Videos</h3>
+<p>Tutorials und Schulungsvideos.</p>
+</div>
 
-    const trainings = [
-      {
-        title: "Einführung für neue Mitarbeiter",
-        level: "Basis",
-        duration: "20 Min",
-        lessons: ["Unsere Qualitätsstandards", "Auftreten beim Kunden", "Grundlagen der Pflanzenpflege"]
-      },
-      {
-        title: "Schäden richtig erkennen",
-        level: "Praxis",
-        duration: "15 Min",
-        lessons: ["Typische Symptome", "Ursachen unterscheiden", "Sofortmaßnahmen"]
-      },
-      {
-        title: "Schädlingskontrolle im Service",
-        level: "Praxis",
-        duration: "18 Min",
-        lessons: ["Früherkennung", "Dokumentation", "Weitergabe ans Team"]
-      },
-      {
-        title: "Hydrokultur und Spezialpflege",
-        level: "Fortgeschritten",
-        duration: "12 Min",
-        lessons: ["Wasserstand lesen", "Reinigung", "Düngung"]
-      }
-    ];
+<div class="card" onclick="openPage('checkliste')">
+<h3>✅ Checklisten</h3>
+<p>Servicekontrollen vor Ort.</p>
+</div>
 
-    const videos = [
-      {
-        title: "Hydrokultur-Service",
-        note: "Beispiel für ein internes Video. Später durch euren YouTube-Link ersetzen.",
-        image: "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=1000&q=80"
-      },
-      {
-        title: "Richtiges Gießen im Innenraum",
-        note: "Kurzes Lernvideo für neue Mitarbeiter.",
-        image: "https://images.unsplash.com/photo-1512428813834-c702c7702b78?auto=format&fit=crop&w=1000&q=80"
-      },
-      {
-        title: "Schädlinge früh erkennen",
-        note: "Video zur Sichtprüfung im laufenden Service.",
-        image: "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=1000&q=80"
-      }
-    ];
+</div>
 
-    const checklist = [
-      "Wasserstand oder Substrat prüfen",
-      "Gelbe oder beschädigte Blätter entfernen",
-      "Schädlingskontrolle an Blattober- und -unterseiten",
-      "Standort und Lichtverhältnisse bewerten",
-      "Gefäße und Bereich sauber hinterlassen",
-      "Auffälligkeiten dokumentieren"
-    ];
+</div>
 
-    function login() {
-      const value = document.getElementById("password").value;
-      const errorMsg = document.getElementById("errorMsg");
+</div>
 
-      if (value === DEMO_PASSWORD) {
-        document.getElementById("loginScreen").classList.add("hidden");
-        document.getElementById("appScreen").classList.remove("hidden");
-        errorMsg.classList.add("hidden");
-        renderAll();
-        showTab("start");
-      } else {
-        errorMsg.classList.remove("hidden");
-      }
-    }
+<!-- SCHNELLHILFE -->
 
-    function logout() {
-      document.getElementById("appScreen").classList.add("hidden");
-      document.getElementById("loginScreen").classList.remove("hidden");
-      document.getElementById("password").value = "";
-    }
+<div id="schnellhilfe" class="hidden container">
 
-    function showTab(tab) {
-      document.querySelectorAll(".tab-panel").forEach(function(panel) {
-        panel.classList.add("hidden");
-      });
+<button class="back" onclick="home()">← Zurück</button>
 
-      const activePanel = document.getElementById("tab-" + tab);
-      if (activePanel) {
-        activePanel.classList.remove("hidden");
-      }
+<h2>Schnellhilfe</h2>
 
-      document.querySelectorAll(".nav-tabs .tab").forEach(function(btn) {
-        btn.classList.remove("active");
-      });
+<p>Wähle das Problem:</p>
 
-      const activeBtn = document.querySelector('[data-tab="' + tab + '"]');
-      if (activeBtn) {
-        activeBtn.classList.add("active");
-      }
-    }
+<ul>
 
-    function renderKnowledge() {
-      const input = document.getElementById("knowledgeSearch");
-      const query = input ? input.value.toLowerCase() : "";
-      const list = document.getElementById("knowledgeList");
+<li onclick="openPage('thripse')">Silbrige Blätter / Flecken</li>
 
-      const filtered = knowledge.filter(function(item) {
-        return [item.category, item.title, item.summary, item.tags.join(" ")]
-          .join(" ")
-          .toLowerCase()
-          .includes(query);
-      });
+<li onclick="openPage('spinnmilben')">Feine Netze auf Blättern</li>
 
-      list.innerHTML = filtered.map(function(item) {
-        return `
-          <div class="card">
-            <div>${item.tags.map(function(tag) { return `<span class="pill">${tag}</span>`; }).join("")}</div>
-            <p style="margin:8px 0 6px; color:var(--green-700); font-size:12px; font-weight:bold; text-transform:uppercase;">${item.category}</p>
-            <h3>${item.title}</h3>
-            <p class="subtle">${item.summary}</p>
-            <ol class="article-steps">
-              ${item.steps.map(function(step) { return `<li>${step}</li>`; }).join("")}
-            </ol>
-          </div>
-        `;
-      }).join("");
-    }
+<li onclick="openPage('wollaeuse')">Weiße watteartige Punkte</li>
 
-    function initIssueFilters() {
-      const plants = ["Alle"].concat(Array.from(new Set(issues.map(function(i) { return i.plant; }))));
-      const symptoms = ["Alle"].concat(Array.from(new Set(issues.map(function(i) { return i.symptom; }))));
+<li onclick="openPage('schildlaeuse')">Braune Schilde auf Blättern</li>
 
-      document.getElementById("plantFilter").innerHTML = plants.map(function(v) {
-        return `<option value="${v}">${v}</option>`;
-      }).join("");
+</ul>
 
-      document.getElementById("symptomFilter").innerHTML = symptoms.map(function(v) {
-        return `<option value="${v}">${v}</option>`;
-      }).join("");
-    }
+</div>
 
-    function renderIssues() {
-      const plantValue = document.getElementById("plantFilter").value;
-      const symptomValue = document.getElementById("symptomFilter").value;
+<!-- PFLANZEN -->
 
-      const filtered = issues.filter(function(item) {
-        const plantOk = plantValue === "Alle" || item.plant === plantValue;
-        const symptomOk = symptomValue === "Alle" || item.symptom === symptomValue;
-        return plantOk && symptomOk;
-      });
+<div id="pflanzen" class="hidden container">
 
-      document.getElementById("issuesList").innerHTML = filtered.map(function(item) {
-        return `
-          <div class="card">
-            <div style="display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; align-items:center;">
-              <h3 style="margin-bottom:0;">${item.plant}</h3>
-              <span class="pill">${item.symptom}</span>
-            </div>
-            <p style="margin:16px 0 6px;"><strong>Wahrscheinliche Ursache</strong></p>
-            <p class="subtle">${item.cause}</p>
-            <p style="margin:16px 0 6px;"><strong>Empfohlene Maßnahme</strong></p>
-            <p class="subtle">${item.action}</p>
-          </div>
-        `;
-      }).join("");
-    }
+<button class="back" onclick="home()">← Zurück</button>
 
-    function renderPests() {
-      document.getElementById("pestList").innerHTML = pests.map(function(item) {
-        return `
-          <div class="card">
-            <h3>${item.name}</h3>
-            <p><strong>Erkennung</strong></p>
-            <p class="subtle">${item.recognition}</p>
-            <p><strong>Behandlung</strong></p>
-            <p class="subtle">${item.treatment}</p>
-            <p><strong>Vorbeugung</strong></p>
-            <p class="subtle">${item.prevention}</p>
-          </div>
-        `;
-      }).join("");
-    }
+<h2>Pflanzenarten</h2>
 
-    function renderTrainings() {
-      document.getElementById("trainingList").innerHTML = trainings.map(function(item) {
-        return `
-          <div class="card">
-            <div style="display:flex; justify-content:space-between; gap:12px; align-items:center; flex-wrap:wrap;">
-              <h3 style="margin-bottom:0;">${item.title}</h3>
-              <span class="pill">${item.duration}</span>
-            </div>
-            <p class="subtle">Niveau: ${item.level}</p>
-            <ul class="article-steps">
-              ${item.lessons.map(function(lesson) { return `<li>${lesson}</li>`; }).join("")}
-            </ul>
-            <button class="btn" style="background:#0f172a; color:#fff; margin-top:10px;">Modul öffnen</button>
-          </div>
-        `;
-      }).join("");
-    }
+<ul>
 
-    function renderVideos() {
-      document.getElementById("videoList").innerHTML = videos.map(function(item) {
-        return `
-          <div class="card">
-            <div class="video-thumb"><img src="${item.image}" alt="${item.title}"></div>
-            <h3>${item.title}</h3>
-            <p class="subtle">${item.note}</p>
-            <a href="#" class="video-btn" onclick="alert('Später kommt hier euer echter YouTube-Link hinein.'); return false;">Video ansehen</a>
-          </div>
-        `;
-      }).join("");
-    }
+<li onclick="openPage('ficus')">Ficus</li>
 
-    function renderChecklist() {
-      document.getElementById("checklistBox").innerHTML = checklist.map(function(item) {
-        return `
-          <label class="check-item">
-            <input type="checkbox" />
-            <span>${item}</span>
-          </label>
-        `;
-      }).join("");
-    }
+<li onclick="openPage('dracaena')">Dracaena</li>
 
-    function renderAll() {
-      renderKnowledge();
-      initIssueFilters();
-      renderIssues();
-      renderPests();
-      renderTrainings();
-      renderVideos();
-      renderChecklist();
-    }
+<li onclick="openPage('monstera')">Monstera</li>
 
-    document.getElementById("password").addEventListener("keydown", function(event) {
-      if (event.key === "Enter") {
-        login();
-      }
-    });
-  </script>
+<li onclick="openPage('spathiphyllum')">Spathiphyllum</li>
+
+<li onclick="openPage('zamioculcas')">Zamioculcas</li>
+
+</ul>
+
+</div>
+
+<!-- SCHÄDLING BEISPIEL -->
+
+<div id="thripse" class="hidden container">
+
+<button class="back" onclick="home()">← Zurück</button>
+
+<h2>Thripse</h2>
+
+<p>
+Thripse verursachen silbrige Flecken auf Blättern und können
+schnell große Schäden verursachen.
+</p>
+
+<p>Bekämpfung:</p>
+
+<ul>
+
+<li onclick="openPage('raubmilben')">Raubmilben einsetzen</li>
+
+</ul>
+
+</div>
+
+<div id="raubmilben" class="hidden container">
+
+<button class="back" onclick="home()">← Zurück</button>
+
+<h2>Raubmilben</h2>
+
+<p>
+
+Nützlinge zur biologischen Bekämpfung von Thripsen und Spinnmilben.
+
+</p>
+
+<p>
+
+Anwendung: Karten in die Pflanze hängen.
+
+</p>
+
+</div>
+
+<!-- BLUEPLANT -->
+
+<div id="blueplant" class="hidden container">
+
+<button class="back" onclick="home()">← Zurück</button>
+
+<h2>Blueplant Hilfe</h2>
+
+<p>
+
+Blueplant wird für Dokumentation, Lauflisten und Bestände verwendet.
+
+</p>
+
+<a href="tel:+436644145215">
+<button>Problem melden</button>
+</a>
+
+</div>
+
+<!-- CHECKLISTE -->
+
+<div id="checkliste" class="hidden container">
+
+<button class="back" onclick="home()">← Zurück</button>
+
+<h2>Service Checkliste</h2>
+
+<ul>
+
+<li>Wasserstand prüfen</li>
+
+<li>Schädlingskontrolle durchführen</li>
+
+<li>Gelbe Blätter entfernen</li>
+
+<li>Standort prüfen</li>
+
+<li>Dokumentation in Blueplant</li>
+
+</ul>
+
+</div>
+
+<script>
+
+function login(){
+
+let pass=document.getElementById("password").value;
+
+if(pass==="Ammon1913"){
+
+document.getElementById("login").classList.add("hidden");
+
+document.getElementById("app").classList.remove("hidden");
+
+}else{
+
+document.getElementById("error").innerText="Falsches Passwort";
+
+}
+
+}
+
+function openPage(id){
+
+document.querySelectorAll(".container").forEach(p=>p.classList.add("hidden"));
+
+document.getElementById("app").classList.add("hidden");
+
+document.getElementById(id).classList.remove("hidden");
+
+}
+
+function home(){
+
+document.querySelectorAll(".container").forEach(p=>p.classList.add("hidden"));
+
+document.getElementById("app").classList.remove("hidden");
+
+}
+
+</script>
+
 </body>
 </html>
